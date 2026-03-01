@@ -1,10 +1,19 @@
 import { app, BrowserWindow } from 'electron';
 import { isDev } from './utils/is-dev.js';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 800,
 		height: 600,
+		webPreferences: {
+			nodeIntegration: true,
+			preload: join(
+				dirname(fileURLToPath(import.meta.url)),
+				'preload.js',
+			),
+		},
 	});
 
 	if (isDev) {

@@ -12,11 +12,11 @@ tasks:
 
     dev:
         desc: Run dev mode on client
+        env:
+            NODE_ENV: development
         deps: [await-port]
         cmds:
             - pnpm dev
-        env:
-            NODE_ENV: development
 
     build:
         deps: [ts-build]

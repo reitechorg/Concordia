@@ -25,4 +25,4 @@ tasks:
             - pnpm install
 
     dev:
-        deps: [client:dev, interface:dev]
+        deps: [interface:dev, client:dev]

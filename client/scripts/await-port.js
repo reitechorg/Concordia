@@ -1,10 +1,9 @@
 const port = 1420;
-const delayMs = 1000;
 
 async function checkPort(port) {
 	try {
 		const response = await fetch(`http://localhost:${port}/`, {
-			signal: AbortSignal.timeout(3000),
+			method: 'GET',
 		});
 
 		return response.ok;
@@ -14,7 +13,7 @@ async function checkPort(port) {
 }
 
 async function delay(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function main() {
@@ -25,7 +24,7 @@ async function main() {
 			console.log(`Server detected on port ${port}`);
 			break;
 		}
-		await delay(delayMs);
+		await delay(2000);
 	} while (true);
 
 	process.exit(0);
