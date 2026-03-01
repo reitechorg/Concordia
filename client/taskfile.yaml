@@ -1,0 +1,27 @@
+version: '3'
+
+interval: '500ms'
+
+tasks:
+    ts-build:
+        internal: true
+        sources:
+            - ./src/**/*.ts
+        cmds:
+            - pnpm build-typescript
+
+    dev:
+        desc: Run dev mode on client
+        cmds:
+            - pnpm dev
+        env:
+            NODE_ENV: development
+
+    build:
+        deps: [ts-build]
+        env:
+            NODE_ENV: production
+
+    install:
+        cmds:
+            - pnpm install

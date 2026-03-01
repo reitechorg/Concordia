@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+    install:
+        cmds:
+            - pnpm install
+
+    dev:
+        cmds:
+            - pnpm dev
+
+    start:
+        deps: [migrate-dev]
+        cmds:
+            - pnpm start
+
+    migrate-dev:
+        sources:
+            - './prisma/**/*.prisma'
+        cmds:
+            - pnpm prisma migrate dev

@@ -1,0 +1,28 @@
+version: '3'
+
+includes:
+    client:
+        taskfile: ./client
+        dir: ./client
+    interface:
+        taskfile: ./interface
+        dir: ./interface
+    server:
+        taskfile: ./server
+        dir: ./server
+
+tasks:
+    build:
+        desc: Build entire application
+        cmds:
+            - task: interface:build
+            - task: client:build
+
+    install:
+        desc: Install all dependencies
+        deps: [client:install, interface:install, server:install]
+        cmds:
+            - pnpm install
+
+    dev:
+        deps: [client:dev, interface:dev]

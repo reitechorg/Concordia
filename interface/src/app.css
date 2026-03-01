@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+	--background-color: #0f0f0f;
+	--accent-color: #7348e7;
+	--on-accent-color: #fff;
+
+	background-color: var(--background-color);
+	font-family: "Funnel Sans", sans-serif;
+	color: white;
+	overflow: hidden;
+	height: 100vh;
+	width: 100vw;
+}
+
+/* width */
+::-webkit-scrollbar {
+	width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #222;
+	border-radius: 0.25rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #444;
+}

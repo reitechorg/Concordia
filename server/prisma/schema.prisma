@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client"  
+  output = "../src/generated"
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String   @db.VarChar(255)
+  password   String?   @db.VarChar(255)
+  profileUrl String?  @db.VarChar(255)
+  publicKey  String?   @db.Text
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  messages Message[]
+  files File[]
+  tokens Token[]
+  roles Role[]
+  votes Vote[]
+}
+
+model Token {
+  token     String @id 
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+}
+
+model Message {
+  id        String    @id @default(cuid())
+  text      String    @db.VarChar(255)
+  author    User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId  String?
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  files     File[]
+  polls     Poll[]     @relation("PollMessages")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index(fields: [createdAt])
+}
+
+model File {
+  id        String    @id @default(cuid())
+  filename  String    @db.VarChar(255)
+  mimetype  String    @db.VarChar(255)
+  path      String    @db.VarChar(255)
+  Message   Message? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+  messageId String?
+
+  author    User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  authorId  String?
+
+  @@index (fields:[filename])
+}
+
+model Channel {
+  id          String    @id @default(cuid())
+  title       String    @db.VarChar(255)
+  description String?   @db.VarChar(255)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  messages  Message[]
+  permissions Permission[]
+}
+
+model Poll {
+  id          String    @id @default(cuid())
+  title       String    @db.VarChar(255)
+  options     Option[]  @relation("PollOptions")
+  message     Message? @relation("PollMessages", fields: [messageId], references: [id], onDelete: Cascade)
+  messageId   String?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Option {
+  id          String    @id @default(cuid())
+  title       String    @db.VarChar(255)
+  pollId      String
+  opened      Boolean  @default(true)
+  poll        Poll      @relation("PollOptions", fields: [pollId], references: [id], onDelete: Cascade)
+  votes       Vote[]     @relation("OptionVotes")
+}
+
+model Vote {
+  id        String    @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  option    Option   @relation("OptionVotes", fields: [optionId], references: [id], onDelete: Cascade)
+  optionId  String
+}
+
+model Role {
+  title   String  @id
+  
+  users   User[]
+  permissions Permission[]
+}
+
+model Permission {
+  id          String      @id @default(cuid())
+  role        Role        @relation(fields: [roleId], references: [title], onDelete: Cascade, onUpdate: Cascade)
+  roleId      String
+  channel     Channel?     @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId   String?
+  permission  Permissions
+  state       PermissionState
+
+  @@index([roleId, channelId, permission], name: "role_channel_permission")
+}
+
+enum Permissions {
+  MESSAGE_SEND  
+  MESSAGE_DELETE
+
+  CHANNEL_CREATE
+  CHANNEL_READ
+  CHANNEL_UPDATE
+  CHANNEL_DELETE
+
+  ROLE_CREATE
+  ROLE_READ
+  ROLE_UPDATE
+  ROLE_DELETE
+  ROLE_ASSIGN
+
+  SERVER_UPDATE
+}
+
+enum PermissionState {
+  ALLOW
+  INHERIT
+  DENY
+}

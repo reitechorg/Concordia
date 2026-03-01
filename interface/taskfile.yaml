@@ -1,0 +1,16 @@
+version: '3'
+
+tasks:
+    dev:
+        desc: 'Run interface in dev mode'
+        cmds:
+            - pnpm dev
+
+    build:
+        desc: 'Build interface'
+        cmds:
+            - pnpm build
+
+    install:
+        cmds:
+            - pnpm install
