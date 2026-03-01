@@ -210,9 +210,10 @@ const setup = async () => {
 	// Run script to create a default channel
 	execSync(`npx tsx --env-file=.temp.env ./scripts/createDefaultChannel.ts`);
 
+	console.log(chalk.green("[SETUP] Admin user created!"));
+
 	// Remove the temporary file
 	fs.unlinkSync("./.temp.env");
-	console.log(chalk.green("[SETUP] Admin user created!"));
 
 	console.log(chalk.green("\n[SETUP] Server setup complete!"));
 	console.log(
