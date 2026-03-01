@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
-import { isDev } from './utils/is-dev.js';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isDev } from './utils/is-dev.js';
 
 const createWindow = () => {
 	const win = new BrowserWindow({

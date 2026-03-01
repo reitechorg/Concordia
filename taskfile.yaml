@@ -10,6 +10,9 @@ includes:
     server:
         taskfile: ./server
         dir: ./server
+    core:
+        taskfile: ./core
+        dir: ./core
 
 tasks:
     build:
@@ -20,9 +23,12 @@ tasks:
 
     install:
         desc: Install all dependencies
-        deps: [client:install, interface:install, server:install]
         cmds:
             - pnpm install
+            - task: core:install
+            - task: client:install
+            - task: interface:install
+            - task: server:install
 
     dev:
         deps: [interface:dev, client:dev]

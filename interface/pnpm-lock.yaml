@@ -26,6 +26,9 @@ importers:
       tailwindcss:
         specifier: ^4.0.15
         version: 4.0.15
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@iconify-json/lucide':
         specifier: ^1.2.32
@@ -964,6 +967,9 @@ packages:
   zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
 
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -1693,3 +1699,5 @@ snapshots:
   webpack-virtual-modules@0.6.2: {}
 
   zimmerframe@1.1.2: {}
+
+  zod@4.3.6: {}
