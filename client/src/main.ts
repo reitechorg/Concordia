@@ -1,5 +1,5 @@
-import { app, BrowserWindow } from 'electron';
-import { isDev } from './utils/is-dev.js';
+import { app, BrowserWindow } from "electron";
+import { isDev } from "./utils/is-dev.js";
 
 const createWindow = () => {
 	const win = new BrowserWindow({
@@ -8,23 +8,23 @@ const createWindow = () => {
 	});
 
 	if (isDev) {
-		win.loadURL('http://localhost:1420');
-		console.log('Running in development mode');
+		win.loadURL("http://localhost:1420");
+		console.log("Running in development mode");
 	}
 };
 
-app.on('ready', () => {
+app.on("ready", () => {
 	createWindow();
 
-	app.on('activate', () => {
+	app.on("activate", () => {
 		if (BrowserWindow.getAllWindows().length === 0) {
 			createWindow();
 		}
 	});
 });
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+	if (process.platform !== "darwin") {
 		app.quit();
 	}
 });

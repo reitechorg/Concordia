@@ -20,6 +20,7 @@ const createChannel = async () => {
 			description: "The default channel",
 		},
 	});
+	process.exit();
 };
 
 createChannel();
