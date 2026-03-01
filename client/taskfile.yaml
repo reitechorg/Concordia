@@ -12,6 +12,7 @@ tasks:
 
     dev:
         desc: Run dev mode on client
+        deps: [await-port]
         cmds:
             - pnpm dev
         env:
@@ -25,3 +26,8 @@ tasks:
     install:
         cmds:
             - pnpm install
+
+    await-port:
+        internal: true
+        cmds:
+            - node ./scripts/await-port.js
