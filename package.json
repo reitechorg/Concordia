@@ -9,5 +9,12 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"packageManager": "pnpm@10.25.0"
+	"packageManager": "pnpm@10.25.0",
+	"devDependencies": {
+		"prettier": "^3.8.1"
+	},
+	"dependencies": {
+		"prettier-plugin-svelte": "^3.5.0",
+		"prettier-plugin-tailwindcss": "^0.7.2"
+	}
 }
