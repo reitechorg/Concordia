@@ -7,21 +7,16 @@ const config = {
 	kit: {
 		adapter: adapter({
 			fallback: 'index.html',
-			pages: "../client/dist/build",
-			assets: "../client/dist/build",
+			pages: '../client/dist/build',
+			assets: '../client/dist/build',
 		}),
-		paths: {
-			relative: true,
-			base: '',
-			assets: ''
-		},
-		prerender: {
-			entries: ['*']
-		}
+		// output: {
+		// 	bundleStrategy: 'inline',
+		// },
 	},
 
 	compilerOptions: {
-		warningFilter: (warning) => {
+		warningFilter: warning => {
 			const ignore = [
 				'a11y_media_has_caption',
 				'a11y_no_redundant_roles',

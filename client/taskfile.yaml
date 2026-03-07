@@ -20,8 +20,6 @@ tasks:
 
     build:
         deps: [ts-build]
-        env:
-            NODE_ENV: production
         cmds:
             - npx electron-builder build
 
