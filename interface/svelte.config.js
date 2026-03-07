@@ -7,7 +7,17 @@ const config = {
 	kit: {
 		adapter: adapter({
 			fallback: 'index.html',
+			pages: "../client/dist/build",
+			assets: "../client/dist/build",
 		}),
+		paths: {
+			relative: true,
+			base: '',
+			assets: ''
+		},
+		prerender: {
+			entries: ['*']
+		}
 	},
 
 	compilerOptions: {

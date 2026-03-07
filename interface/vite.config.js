@@ -18,10 +18,11 @@ export default defineConfig({
 				{
 					src: 'node_modules/@discordapp/twemoji/dist/svg',
 					dest: 'emoji',
-				},
+				}
 			],
 		}),
 	],
+	base: "./",
 
 	clearScreen: false,
 	server: {
