@@ -4,9 +4,7 @@ import type { RsaIdentity, UserDefaults } from '../types/RsaIdentity';
 
 // RSA key fuctions
 const generateRsaKeyPair = async (keyId: string) => {
-	throw new Error('Not implemented'); // TODO: Replace with Electrons API
-	// const result = await invoke<string>("create_rsa_keys", { keyId });
-	// return result;
+	return window.rsa.create(keyId);
 };
 
 export const signWithRsaKey = async (payload: string, keyId: string) => {
@@ -19,9 +17,7 @@ export const signWithRsaKey = async (payload: string, keyId: string) => {
 };
 
 const getPublicRsaKey = async (keyId: string) => {
-	throw new Error('Not implemented'); // TODO: Replace with Electrons API
-	// const result = await invoke<string>('get_public_rsa_key', { keyId });
-	// return result;
+	return window.rsa.getPublic(keyId);
 };
 
 const deleteRsaKeyPair = async (keyId: string) => {
@@ -35,12 +31,12 @@ const listRsaKeyIds = async () => {
 };
 
 // Identity functions
-
 function saveIdentities(identities: RsaIdentity[]) {
 	localStorage.setItem('identities', JSON.stringify(identities));
 }
 
 export function listIdentities() {
+	getPublicRsaKey('qmcsfilh6e72lybmsdfp3hej');
 	try {
 		const dataFromStorage = localStorage.getItem('identities') || '[]';
 		const identities: RsaIdentity[] = JSON.parse(dataFromStorage);
@@ -53,15 +49,13 @@ export function listIdentities() {
 
 export function getIdentity(identityId: string) {
 	const identities = listIdentities();
-	const identity = identities.find((identity) => identity.id === identityId);
+	const identity = identities.find(identity => identity.id === identityId);
 	return identity;
 }
 
 export async function deleteIdentity(identityId: string) {
 	const identities = listIdentities();
-	const newIdentities = identities.filter(
-		(identity) => identity.id !== identityId,
-	);
+	const newIdentities = identities.filter(identity => identity.id !== identityId);
 	saveIdentities(newIdentities);
 	await deleteRsaKeyPair(identityId);
 }

@@ -1,9 +1,12 @@
-import { app, BrowserWindow, net, protocol } from 'electron';
+import { app, BrowserWindow, ipcMain, net, protocol } from 'electron';
 import path, { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isDev } from './utils/is-dev.js';
 import url from 'node:url';
 import fs from 'node:fs';
+import CreateRSAKeys from './ipc/rsa/create.js';
+import GetPublicRSA from './ipc/rsa/get.js';
+
 const PORT = 3000;
 
 function spaPathToFilePath(path: string): string {
@@ -45,6 +48,14 @@ protocol.registerSchemesAsPrivileged([
 		},
 	},
 ]);
+
+ipcMain.handle('rsa:create', (_event, keyId: string) => {
+	return CreateRSAKeys(keyId);
+});
+
+ipcMain.handle('rsa:getPublic', (_event, keyId: string) => {
+	return GetPublicRSA(keyId);
+});
 
 app.on('ready', () => {
 	protocol.handle('app', request => {
