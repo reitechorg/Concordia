@@ -38,7 +38,7 @@ jobs:
                       client/dist/*.deb
                       client/dist/*.dmg
 
-    relase:
+    release:
         needs: build
         runs-on: ubuntu-latest
         permissions:
