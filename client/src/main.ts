@@ -16,6 +16,19 @@ function spaPathToFilePath(path: string): string {
 	return join(dirname(fileURLToPath(import.meta.url)), '..', 'dist', 'build', path);
 }
 
+protocol.registerSchemesAsPrivileged([
+	{
+		scheme: 'app',
+		privileges: {
+			standard: true,
+			bypassCSP: true,
+			secure: true,
+			supportFetchAPI: true,
+			stream: true,
+		},
+	},
+]);
+
 const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 800,
@@ -36,18 +49,6 @@ const createWindow = () => {
 	RegisterIPC(win);
 	return win;
 };
-
-protocol.registerSchemesAsPrivileged([
-	{
-		scheme: 'app',
-		privileges: {
-			bypassCSP: true,
-			secure: true,
-			supportFetchAPI: true,
-			stream: true,
-		},
-	},
-]);
 
 app.on('ready', () => {
 	protocol.handle('app', request => {

@@ -1,0 +1,35 @@
+name: Build client
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+        paths:
+            - 'client/**'
+            - 'interface/**'
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
+
+        runs-on: ${{ matrix.os }}
+
+        permissions:
+            contents: read
+            deployments: write
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+            - name: Install Node.js and pnpm
+              uses: pnpm/setup@v6
+              with:
+                  version: 10
+                  runtime: node@26
+                  install: false
+            - name: Setup task
+              uses: go-task/setup-task@v2
+            - name: Build interface & app
+              run: task install build
