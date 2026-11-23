@@ -37,7 +37,7 @@ import ApiConfig from '../routes/config/configuration.js';
 import ApiUpdateConfig from '../routes/config/updateConfiguration.js';
 import ApiPollVote from '../routes/polls/vote.js';
 import ApiConfigAccess from '../routes/config/access.js';
-import { logInfo } from '../lib/logger.js';
+import { logError, logInfo, logWarn } from '../lib/logger.js';
 
 export default async function runHTTPServer() {
 	const fastify = Fastify({
@@ -63,6 +63,14 @@ export default async function runHTTPServer() {
 		fastify.get('/ws', { websocket: true }, socket => {
 			socket.on('message', (msg: any) => {
 				incomingMessage(msg);
+			});
+
+			socket.on('error', (e: Error) => {
+				logError('Socket failed', e);
+			});
+
+			socket.on('close', (code, reason) => {
+				logWarn('Socket closed', code, reason);
 			});
 
 			logInfo('New connection!', socket);
