@@ -1,5 +1,6 @@
 import { generateKeyPairSync } from 'node:crypto';
 import storage from '../../utils/storage.js';
+import { logInfo } from '../../utils/logger.js';
 
 export default function CreateRSAKeys(keyId: string) {
 	const { publicKey, privateKey } = generateKeyPairSync('rsa', {
@@ -21,7 +22,8 @@ export default function CreateRSAKeys(keyId: string) {
 		public: publicKeyString,
 		private: privateKeyString,
 	});
-	console.log(`Saved new identity ${keyId}`);
+
+	logInfo(`Saved new identity ${keyId}`);
 
 	return publicKeyString;
 }

@@ -1,6 +1,7 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import db from "../../modules/database.js";
-import log from "../../lib/log.js";
+import { FastifyRequest, FastifyReply } from 'fastify';
+import db from '../../modules/database.js';
+import { UpdateConnections } from '../../lib/handleMessage.js';
+import { logInfo } from '../../lib/logger.js';
 
 interface Body {
 	title: string;
@@ -12,11 +13,13 @@ export default async function ApiCreateChannel(req: FastifyRequest, res: Fastify
 
 	const { title, description } = req.body as Body;
 
-	if (!title || title.length < 0) return res.send({ status: 400, message: "No title provided" });
+	if (!title || title.length < 0) return res.send({ status: 400, message: 'No title provided' });
 
 	const channel = await db.channel.create({ data: { title: title, description: description } });
 
-	log(`New channel ${channel.title}`, "CreateChannel", "INFO"); // Log the creation
+	logInfo(`[CreateChannel] New channel ${channel.title}`);
+
+	UpdateConnections('newChannel', { channel });
 
 	return res.send(channel);
 }

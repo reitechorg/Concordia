@@ -11,11 +11,19 @@
 	import { serverList } from '../../../components/servers/getServers.svelte';
 	import { page } from '$app/state';
 	import MessageBox from '../../../components/chat/messageBox.svelte';
-	import { activeChannel, messages } from '../../../components/store.svelte';
+	import { activeChannel, channels, messages } from '../../../components/store.svelte';
 	import ServerActions from './ServerActions.svelte';
+	import ContextMenu from '../../../components/server/channelContextMenu.svelte';
+	import { activeServer } from '../../../components/store.svelte';
+
+	// svelte-ignore non_reactive_update
+	let contextMenu: any;
+
+	function openContextMenu(event: Event) {
+		contextMenu.handleContextMenu(event);
+	}
 
 	let server: Server | undefined = $state(undefined);
-	// let messages: Awaited<Message[]> = $state([]);
 	let lastParam: number = -1;
 	const servers: Server[] = serverList.servers;
 
@@ -35,14 +43,18 @@
 		const selectedServer = servers.find(server => server.id == serverId) ?? servers[0];
 		if (!selectedServer) return goto('/servers');
 
+		activeServer.serverId = serverId;
+		activeServer.serverURL = selectedServer.serverUrl;
+
 		// Get the channels
 		selectedServer.channels = (await getChannels(selectedServer)) ?? [];
+		channels.channels = selectedServer.channels;
 
 		// Update the state
 		server = selectedServer;
 		activeChannel.channelId = selectedServer?.channels[0]?.id;
 
-		// If we got a  channel, get the messages
+		// If we got a channel, get the messages
 		if (activeChannel.channelId)
 			messages.messages = await getMessages(selectedServer!, activeChannel.channelId);
 		return 0;
@@ -66,8 +78,6 @@
 				},
 			});
 			const newMessages: Message[] = await response.json();
-			console.log(newMessages);
-
 			return newMessages;
 		} catch (e) {
 			console.error(e);
@@ -76,11 +86,18 @@
 	}
 
 	async function selectChannel(channelId: string) {
-		if (activeChannel.channelId === channelId) return;
+		if (activeChannel.channelId === channelId && channelId !== 'none') return;
+		if (channelId === 'none') channelId = channels.channels[0].id;
 
 		messages.messages = await getMessages(server!, channelId);
 		activeChannel.channelId = channelId;
 	}
+
+	// Update channel in case of change by channel being deleted
+	$effect(() => {
+		const channelId = activeChannel.channelId;
+		selectChannel(channelId);
+	});
 
 	function handleKeyboard(e: KeyboardEvent) {
 		if (e.code === 'Escape') {
@@ -97,7 +114,7 @@
 
 {#if server !== undefined}
 	<div class="flex h-full w-full max-w-full gap-2">
-		<div id="sidebar" class="flex w-40 min-w-40 flex-col py-1">
+		<div id="sidebar" class="flex w-60 min-w-40 flex-col py-1">
 			<div class="relative w-full">
 				<button
 					onclick={toggleServerEdit}
@@ -123,15 +140,21 @@
 					<ServerActions {closeServerEdit} {server} />
 				{/if}
 			</div>
-			<div class=" mt-1 h-full w-full overflow-auto rounded">
+			<div class="mt-1 h-full w-full overflow-auto rounded" oncontextmenu={openContextMenu}>
+				<ContextMenu bind:this={contextMenu} {server} />
 				<ChannelList
-					channels={server!.channels}
+					channels={channels.channels}
 					{selectChannel}
 					selectedChannel={activeChannel.channelId} />
 			</div>
 			<!-- User card -->
-			<div class="mt-1 h-20 w-full rounded rounded-br-lg bg-zinc-900">
-				<!-- Will do... one day.$$ -->
+			<div
+				class="mt-1 flex h-16 w-full items-center gap-2 rounded rounded-br-lg bg-zinc-900 p-2">
+				<div class="h-12 w-12 overflow-hidden rounded bg-red-500"></div>
+				<div class="flex flex-col">
+					<p>Fox123</p>
+					<p>Online</p>
+				</div>
 			</div>
 		</div>
 		{#if activeChannel.channelId}

@@ -2,6 +2,7 @@
 
 // import { LazyStore } from "@tauri-apps/plugin-store";
 import type { Message } from '../../../core/types/Message';
+import type { Channel } from '../types/LocalData';
 // import { LazyStore } from "@tauri-apps/plugin-store";
 // import type { Message } from "../types/Message";
 
@@ -33,12 +34,23 @@ import type { Message } from '../../../core/types/Message';
 // 	store.set(channelId, messages);
 // };
 
-const activeChannel = $state({ channelId: '' });
-const messages: { messages: Message[] } = $state({ messages: [] });
+export const activeServer = $state({ serverId: 0, serverURL: '' });
+export const activeChannel = $state({ channelId: '' });
+export const messages: { messages: Message[] } = $state({ messages: [] });
+export const channels: { channels: Channel[] } = $state({ channels: [] });
 
-function pushMessage(message: Message) {
+export function pushMessage(message: Message) {
 	messages.messages.push(message);
 	messages.messages = messages.messages; // force update
 }
 
-export { messages, activeChannel, pushMessage };
+export function pushChannel(channel: Channel) {
+	channels.channels.push(channel);
+	channels.channels = channels.channels;
+}
+
+export function deleteChannel(channelId: string) {
+	channels.channels = channels.channels.filter(c => c.id !== channelId);
+
+	if (activeChannel.channelId === channelId) activeChannel.channelId = 'none';
+}

@@ -1,14 +1,11 @@
-import { FastifyReply } from "fastify";
-import db from "../../modules/database.js";
-import { Permission, Permissions, PermissionState } from "@prisma/client";
-import { RequestWithUser, SafeUser } from "../../types/RequestWithUser.js";
-import hasPermission from "../../lib/hasPermission.js";
-import log from "../../lib/log.js";
+import { FastifyReply } from 'fastify';
+import db from '../../modules/database.js';
+import { Permission, Permissions, PermissionState } from '@prisma/client';
+import { RequestWithUser, SafeUser } from '../../types/RequestWithUser.js';
+import hasPermission from '../../lib/hasPermission.js';
+import { logInfo } from '../../lib/logger.js';
 
-export default async function ApiUpdateChannel(
-	req: RequestWithUser,
-	res: FastifyReply,
-) {
+export default async function ApiUpdateChannel(req: RequestWithUser, res: FastifyReply) {
 	const { channelId } = req.params as { channelId: string };
 
 	const { title, description, permissions } = req.body as {
@@ -34,19 +31,13 @@ export default async function ApiUpdateChannel(
 				});
 			}
 		} catch (e) {
-			return res.status(500).send({ error: "Error updating channel" });
+			return res.status(500).send({ error: 'Error updating channel' });
 		}
 	} else {
-		return res
-			.status(403)
-			.send({ error: "You do not have permission to update this channel" });
+		return res.status(403).send({ error: 'You do not have permission to update this channel' });
 	}
 
-	log(
-		`Updated channel ${channelId} by ${req.user!.name}`,
-		"UpdateChannel",
-		"INFO",
-	);
+	logInfo(`[UpdateChannel] Updated channel ${channelId} by ${req.user!.name}`);
 
 	return res.status(200).send(updatedChannel);
 }

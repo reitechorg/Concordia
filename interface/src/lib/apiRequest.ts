@@ -1,10 +1,17 @@
-export default async function apiRequest(method: "POST" | "GET" | "DELETE", url: string, body?: any, token?: string) {
+export default async function apiRequest(
+	method: 'POST' | 'GET' | 'DELETE',
+	url: string,
+	body?: any,
+	token?: string,
+) {
+	if (method === 'DELETE') return apiDelete(url, token);
+
 	try {
 		const response = await fetch(url, {
 			method: method,
 			headers: {
-				"Content-Type": "application/json",
-				"authorization": token ?? "",
+				'Content-Type': 'application/json',
+				'authorization': token ?? '',
 			},
 			body: body ? JSON.stringify(body) : undefined,
 		});
@@ -14,6 +21,23 @@ export default async function apiRequest(method: "POST" | "GET" | "DELETE", url:
 		const data = await response.json();
 		return data;
 	} catch (e) {
-		console.error("Error in apiRequest", e);
+		console.error('Error in apiRequest', e);
+	}
+}
+
+async function apiDelete(url: string, token?: string) {
+	try {
+		const response = await fetch(url, {
+			method: 'DELETE',
+			headers: {
+				authorization: token ?? '',
+			},
+		});
+
+		if (response.status !== 200) return false;
+
+		return true;
+	} catch (e) {
+		console.error('Error in apiRequest', e);
 	}
 }

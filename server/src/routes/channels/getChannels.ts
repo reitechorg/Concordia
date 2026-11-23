@@ -1,7 +1,7 @@
-import { FastifyReply } from "fastify";
-import db from "../../modules/database.js";
-import log from "../../lib/log.js";
-import { RequestWithUser } from "../../types/RequestWithUser.js";
+import { FastifyReply } from 'fastify';
+import db from '../../modules/database.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
+import { logInfo } from '../../lib/logger.js';
 
 export default async function ApiGetChannels(req: RequestWithUser, res: FastifyReply) {
 	const channels = await db.channel.findMany({
@@ -9,7 +9,7 @@ export default async function ApiGetChannels(req: RequestWithUser, res: FastifyR
 		omit: { createdAt: true, updatedAt: true },
 	}); // Get all channels
 
-	log(`User ${req.user!.name} fetched channels`, "GetChannels", "INFO"); // Log the fetch
+	logInfo(`[GetChannel] User ${req.user!.name} fetched channels`); // Log the fetch
 
 	return res.status(200).send(channels);
 }

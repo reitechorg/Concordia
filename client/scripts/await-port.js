@@ -18,7 +18,7 @@ async function delay(ms) {
 
 async function main() {
 	do {
-		console.log(`Waiting for server to start on port ${port}...`);
+		console.log(`Waiting for server to start on port ${port}...`)
 		const isPortOpen = await checkPort(port);
 		if (isPortOpen) {
 			console.log(`Server detected on port ${port}`);

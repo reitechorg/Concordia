@@ -1,15 +1,15 @@
-import dotenv from "dotenv";
-import chalk from "chalk";
-import setup from "./modules/setup.js";
-import { spawn } from "child_process";
+import dotenv from 'dotenv';
+import setup from './modules/setup.js';
+import { spawn } from 'child_process';
+import { logInfo, logWarn } from './lib/logger.js';
 
 dotenv.config();
 
 if (process.env.DEV) {
-	console.log(chalk.blue("Running in DEV mode"));
+	logWarn('Running in DEV mode');
 }
 
-console.log(`[MAIN] [INFO] .env existing ${process.env.DATABASE_URL ? "✅" : "❌"}`);
+logInfo(`[MAIN] .env existing ${process.env.DATABASE_URL ? '✅' : '❌'}`);
 
 // Setup the server if it's not already setup
 if (!process.env.DATABASE_URL) {
@@ -17,4 +17,10 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Start the server
-else spawn("npx tsx src/start.ts", { stdio: "inherit", shell: true, cwd: process.cwd(), env: process.env });
+else
+	spawn('npx tsx src/start.ts', {
+		stdio: 'inherit',
+		shell: true,
+		cwd: process.cwd(),
+		env: process.env,
+	});

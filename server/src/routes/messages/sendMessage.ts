@@ -1,7 +1,7 @@
 import { FastifyReply } from 'fastify';
 import db from '../../modules/database.js';
 import { RequestWithUser } from '../../types/RequestWithUser.js';
-import { connections } from '../../lib/handleMessage.js';
+import { connections, UpdateConnections } from '../../lib/handleMessage.js';
 import fileUpload from '../../lib/fileUpload.js';
 
 interface Body {
@@ -24,7 +24,6 @@ export default async function ApiSendMessage(req: RequestWithUser, res: FastifyR
 	} = { question: '', options: [] };
 
 	try {
-		console.log(poll);
 		if (poll) pollData = JSON.parse(poll.value);
 	} catch (e) {
 		return res.status(400).send('Invalid poll data');
@@ -82,19 +81,7 @@ export default async function ApiSendMessage(req: RequestWithUser, res: FastifyR
 		},
 	});
 
-	connections.forEach(connection => {
-		console.log('Updating connection');
+	UpdateConnections('newMessage', { channelId: id, message: newMessage });
 
-		connection.send(
-			JSON.stringify({
-				type: 'newMessage',
-				data: {
-					serverUrl: connection.url,
-					channelId: id,
-					message: newMessage,
-				},
-			}),
-		);
-	});
 	res.send(newMessage);
 }

@@ -1,5 +1,6 @@
-import { cached } from "$lib/cache";
-import type { Server } from "../../../types/LocalData";
+import { cached } from '$lib/cache';
+import { logError } from '$lib/logger';
+import type { Server } from '../../../types/LocalData';
 export async function getChannels(server: Server) {
 	let channels = server.channels;
 	try {
@@ -9,17 +10,17 @@ export async function getChannels(server: Server) {
 			},
 		});
 		if (response.status !== 200) {
-			console.error("[ERROR] Failed to fetch channel data");
+			console.error('[ERROR] Failed to fetch channel data');
 			return [];
 		}
 		const data = await response.json();
 		channels = data;
 	} catch (e) {
-		console.log(e);
+		logError(`Failed to get channels for ${server.serverUrl}`, e);
 		return [];
 	}
 
 	return channels;
 }
 
-export const getChannelsCached = cached(getChannels, "channels");
+export const getChannelsCached = cached(getChannels, 'channels');

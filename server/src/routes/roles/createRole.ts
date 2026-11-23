@@ -1,19 +1,15 @@
-import { FastifyReply } from "fastify";
-import db from "../../modules/database.js";
-import hasPermission from "../../lib/hasPermission.js";
-import { RequestWithUser } from "../../types/RequestWithUser.js";
-import { Permission, Permissions } from "@prisma/client";
-import unauthorized from "../../lib/noPermission.js";
-import log from "../../lib/log.js";
+import { FastifyReply } from 'fastify';
+import db from '../../modules/database.js';
+import hasPermission from '../../lib/hasPermission.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
+import { Permission, Permissions } from '@prisma/client';
+import unauthorized from '../../lib/noPermission.js';
+import { logInfo } from '../../lib/logger.js';
 
-export default async function ApiCreateRoles(
-	req: RequestWithUser,
-	res: FastifyReply,
-) {
-	if (!hasPermission(req.user!, Permissions.ROLE_CREATE))
-		return unauthorized(res);
+export default async function ApiCreateRoles(req: RequestWithUser, res: FastifyReply) {
+	if (!hasPermission(req.user!, Permissions.ROLE_CREATE)) return unauthorized(res);
 
-	if (!req.body) return res.status(400).send("No body provided");
+	if (!req.body) return res.status(400).send('No body provided');
 
 	const { title, permissions } = req.body as {
 		title: string;
@@ -30,10 +26,10 @@ export default async function ApiCreateRoles(
 			},
 			include: { permissions: { omit: { roleId: true, channelId: true } } },
 		});
-		log(`Created role ${role.title}`, "CreateRole", "INFO");
+		logInfo(`[CreateRole] Created role ${role.title}`);
 
 		res.status(200).send(role);
 	} catch (e) {
-		return res.status(500).send({ error: "Error creating role" });
+		return res.status(500).send({ error: 'Error creating role' });
 	}
 }

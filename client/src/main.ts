@@ -5,6 +5,7 @@ import { isDev } from './utils/is-dev.js';
 import url from 'node:url';
 import fs from 'node:fs';
 import { RegisterIPC } from './ipc/ipc.js';
+import { logWarn } from './utils/logger.js';
 const PORT = 3000;
 
 function spaPathToFilePath(path: string): string {
@@ -27,7 +28,7 @@ const createWindow = () => {
 
 	if (isDev) {
 		win.loadURL('http://localhost:1420');
-		console.log('Running in development mode');
+		logWarn('Running in development mode');
 	} else {
 		win.loadURL('app://concordia.app/');
 	}

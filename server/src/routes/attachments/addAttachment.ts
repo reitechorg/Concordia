@@ -1,16 +1,13 @@
-import { FastifyReply } from "fastify";
-import fileUpload from "../../lib/fileUpload.js";
-import db from "../../modules/database.js";
-import { RequestWithUser } from "../../types/RequestWithUser.js";
-import log from "../../lib/log.js";
-import { connections } from "../../lib/handleMessage.js";
+import { FastifyReply } from 'fastify';
+import fileUpload from '../../lib/fileUpload.js';
+import db from '../../modules/database.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
+import log from '../../lib/log.js';
+import { connections } from '../../lib/handleMessage.js';
 
-export default async function ApiSendAttachment(
-	req: RequestWithUser,
-	res: FastifyReply,
-) {
+export default async function ApiSendAttachment(req: RequestWithUser, res: FastifyReply) {
 	const file = await fileUpload(req, res);
-	if (!file) return res.status(500).send("Error handling file upload!");
+	if (!file) return res.status(500).send('Error handling file upload!');
 
 	const { channelId } = req.params as { channelId: string };
 
@@ -43,13 +40,12 @@ export default async function ApiSendAttachment(
 				},
 			},
 		});
-		console.log(saveAttachment);
 		saveAttachment.file.path = `${process.env.URL}/files/${saveAttachment.file.path}`;
 
-		connections.forEach((connection) => {
+		connections.forEach(connection => {
 			connection.send(
 				JSON.stringify({
-					type: "newAttachment",
+					type: 'newAttachment',
 					data: {
 						serverUrl: connection.url,
 						channelId: channelId,
@@ -60,7 +56,7 @@ export default async function ApiSendAttachment(
 		});
 		res.send(saveAttachment);
 	} catch (e) {
-		log(e as string, "[API_SA]", "ERROR");
-		return res.status(500).send("Error handling file upload!");
+		log(e as string, '[API_SA]', 'ERROR');
+		return res.status(500).send('Error handling file upload!');
 	}
 }

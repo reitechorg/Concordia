@@ -1,18 +1,12 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { randomString } from "./randomString.js";
-import fs from "node:fs";
-import { pipeline } from "node:stream/promises";
-import log from "./log.js";
-import db from "../modules/database.js";
-import { RequestWithUser } from "../types/RequestWithUser.js";
-import path from "node:path";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { randomString } from './randomString.js';
+import fs from 'node:fs';
+import db from '../modules/database.js';
+import { RequestWithUser } from '../types/RequestWithUser.js';
+import path from 'node:path';
+import { logWarn } from './logger.js';
 
-const acceptTypes = [
-	"image/jpeg",
-	"image/png",
-	"image/webp",
-	"application/json",
-];
+const acceptTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/json'];
 
 type Options = {
 	savePath?: string;
@@ -20,11 +14,7 @@ type Options = {
 };
 
 const errorUnsuported = (res: FastifyReply, type: string) => {
-	log(
-		`Attempted upload of unsuported file type: ${type}`,
-		"FILE_UPLOAD",
-		"WARN",
-	);
+	logWarn(`[FileUpload] Attempted upload of unsuported file type: ${type}`);
 	return res.status(400).send("This endpoint doesn't support your file type");
 };
 
@@ -41,9 +31,7 @@ export default async function fileUpload(
 ) {
 	// Validate server has a location path or an override was given
 	if (!process.env.FILE_PATH && !options?.savePath)
-		return res
-			.status(500)
-			.send("This server doesn't have a location to store files!");
+		return res.status(500).send("This server doesn't have a location to store files!");
 
 	// Get the files
 	const data = await req.saveRequestFiles();
@@ -53,30 +41,29 @@ export default async function fileUpload(
 	let files: L_File[] = [];
 	// Process all files
 	await Promise.all(
-		data.map(async (file) => {
+		data.map(async file => {
 			// Make sure filetype is accepted
 			if (options?.acceptTypes && !options.acceptTypes.includes(file.mimetype))
 				return errorUnsuported(res, file.mimetype); // Check for overriden types
 
-			if (!acceptTypes.includes(file.mimetype))
-				return errorUnsuported(res, file.mimetype); // Check for safe types
+			if (!acceptTypes.includes(file.mimetype)) return errorUnsuported(res, file.mimetype); // Check for safe types
 
 			// Get the file type extension
 			let type;
 			switch (file.mimetype) {
-				case "image/jpeg":
-					type = ".jpg";
+				case 'image/jpeg':
+					type = '.jpg';
 					break;
-				case "image/png":
-					type = ".png";
+				case 'image/png':
+					type = '.png';
 					break;
-				case "image/webp":
-					type = ".webp";
+				case 'image/webp':
+					type = '.webp';
 					break;
 			}
 
 			// Create upload path if it doesn't exist yet
-			const uploadPath = path.join(process.env.FILE_PATH!, "upload");
+			const uploadPath = path.join(process.env.FILE_PATH!, 'upload');
 
 			if (!fs.existsSync(uploadPath))
 				fs.mkdirSync(uploadPath, {
@@ -90,8 +77,7 @@ export default async function fileUpload(
 			let generatedPath = makePath(options, fileName, type);
 
 			// Make sure no file exists with this name
-			while (fs.existsSync(generatedPath))
-				generatedPath = makePath(options, fileName, type);
+			while (fs.existsSync(generatedPath)) generatedPath = makePath(options, fileName, type);
 
 			// Save file
 			fs.copyFileSync(file.filepath, generatedPath);
@@ -106,7 +92,7 @@ export default async function fileUpload(
 
 	// Add all files to database
 	await db.file.createMany({
-		data: files.map((file) => {
+		data: files.map(file => {
 			return {
 				filename: file.filename,
 				mimetype: file.mimetype,
@@ -119,7 +105,7 @@ export default async function fileUpload(
 	const result = await db.file.findMany({
 		where: {
 			path: {
-				in: files.map((file) => file.path),
+				in: files.map(file => file.path),
 			},
 		},
 	});
@@ -127,12 +113,8 @@ export default async function fileUpload(
 	return result ?? [];
 }
 
-const makePath = (
-	options: Options | undefined,
-	fileName: string,
-	type: string | undefined,
-) => {
+const makePath = (options: Options | undefined, fileName: string, type: string | undefined) => {
 	return options?.savePath
 		? `${options.savePath}/${fileName}${type}`
-		: path.join(process.env.FILE_PATH!, "upload", `${fileName}${type}`);
+		: path.join(process.env.FILE_PATH!, 'upload', `${fileName}${type}`);
 };

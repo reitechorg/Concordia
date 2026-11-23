@@ -1,12 +1,10 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import bcrypt from "bcryptjs";
-import db from "../../modules/database.js";
-import crypto from "crypto";
-import log from "../../lib/log.js";
-import { getAndDeleteChallenge } from "../../lib/challengeStorage.js";
-import { isCuid } from "@paralleldrive/cuid2";
-import { safeUser } from "../../lib/safeData.js";
-
+import { FastifyReply, FastifyRequest } from 'fastify';
+import db from '../../modules/database.js';
+import crypto from 'crypto';
+import { getAndDeleteChallenge } from '../../lib/challengeStorage.js';
+import { isCuid } from '@paralleldrive/cuid2';
+import { safeUser } from '../../lib/safeData.js';
+import { logInfo } from '../../lib/logger.js';
 
 type BodyType = {
 	cuid: string;
@@ -18,15 +16,15 @@ export default async function ApiLogin(req: FastifyRequest<{ Body: BodyType }>, 
 	const { cuid, challengeId, signedChallenge } = req.body;
 
 	// Make sure cuid is a valid cuid
-	if (!isCuid(cuid)) return res.status(400).send({ message: "Invalid cuid!" });
+	if (!isCuid(cuid)) return res.status(400).send({ message: 'Invalid cuid!' });
 
 	const challenge = getAndDeleteChallenge(challengeId);
 
 	// Check if challengeId is valid
-	if (!challenge) return res.status(400).send({ message: "Invalid challengeId" });
+	if (!challenge) return res.status(400).send({ message: 'Invalid challengeId' });
 
 	// Make sure cuid is  the same
-	if (challenge.userCuid !== cuid) return res.status(403).send({ message: "Invalid cuid" });
+	if (challenge.userCuid !== cuid) return res.status(403).send({ message: 'Invalid cuid' });
 
 	// Get user if exists
 	const user = await db.user.findFirst({
@@ -36,22 +34,22 @@ export default async function ApiLogin(req: FastifyRequest<{ Body: BodyType }>, 
 	});
 
 	// Make sure user exists
-	if (!user) return res.status(400).send({ message: "User not found" });
+	if (!user) return res.status(400).send({ message: 'User not found' });
 
-	const verifier = crypto.createVerify("RSA-SHA256");
+	const verifier = crypto.createVerify('RSA-SHA256');
 	verifier.update(challenge.challenge);
-	const isValid = verifier.verify(user.publicKey!, signedChallenge, "base64");
+	const isValid = verifier.verify(user.publicKey!, signedChallenge, 'base64');
 
-	if (!isValid) return res.status(403).send({ message: "Invalid signature" });
+	if (!isValid) return res.status(403).send({ message: 'Invalid signature' });
 
 	const token = await db.token.create({
 		data: {
 			userId: user.id,
-			token: crypto.randomBytes(64).toString("hex"),
+			token: crypto.randomBytes(64).toString('hex'),
 		},
 	});
 
-	log(`User ${user.name} logged in`, "Login", "INFO");
-  
+	logInfo(`[Login] User ${user.name} logged in`);
+
 	return res.status(200).send({ status: 200, token: token.token, user: safeUser(user) });
 }

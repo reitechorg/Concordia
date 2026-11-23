@@ -1,16 +1,21 @@
-import { FastifyReply } from "fastify";
-import db from "../modules/database.js";
-import { RequestWithUser } from "../types/RequestWithUser.js";
+import { FastifyReply } from 'fastify';
+import db from '../modules/database.js';
+import { RequestWithUser } from '../types/RequestWithUser.js';
+import { logWarn } from '../lib/logger.js';
 
 const fuckOff = (res: FastifyReply, reason: string) => {
-	console.log(`[LOG] [Auth] Unauthorized request: ${reason}`);
-	res.code(401).send({ error: "Unauthorized" });
+	logWarn(`[Auth] Unauthorized request: ${reason}`);
+	res.code(401).send({ error: 'Unauthorized' });
 };
 
-export default async function Authenticate(req: RequestWithUser, res: FastifyReply, next: Function) {
+export default async function Authenticate(
+	req: RequestWithUser,
+	res: FastifyReply,
+	next: Function,
+) {
 	const AccessToken = req.headers.authorization;
 
-	if (!AccessToken) return fuckOff(res, "Missing access token");
+	if (!AccessToken) return fuckOff(res, 'Missing access token');
 
 	const user = await db.user.findFirst({
 		where: {
@@ -24,7 +29,7 @@ export default async function Authenticate(req: RequestWithUser, res: FastifyRep
 		},
 	});
 
-	if (!user) return fuckOff(res, "Invalid access token");
+	if (!user) return fuckOff(res, 'Invalid access token');
 
 	req.user = user;
 }

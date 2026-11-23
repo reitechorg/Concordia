@@ -1,10 +1,15 @@
 import { serverList } from '../components/servers/getServers.svelte';
-import { activeChannel, messages, pushMessage } from '../components/store.svelte';
+import {
+	activeChannel,
+	activeServer,
+	deleteChannel,
+	pushChannel,
+	pushMessage,
+} from '../components/store.svelte';
 import type { WebsocketMessage } from '../../../core/types/WebsocketMessage';
+import { logError, logInfo } from './logger';
 
 export default function initWebSockets() {
-	console.log('INIT WS');
-
 	const servers: string[] = [];
 
 	serverList.servers.forEach(server => {
@@ -17,11 +22,8 @@ export default function initWebSockets() {
 	});
 }
 
-export async function createWebsocket(server: string) {
-	console.log('Creating WS');
-
-	const ws = window.ws.connect(server);
-	return ws;
+export function createWebsocket(server: string) {
+	return window.ws.connect(server);
 }
 
 window.ws.message((val: WebsocketMessage) => {
@@ -29,26 +31,34 @@ window.ws.message((val: WebsocketMessage) => {
 });
 
 const handleWebsocketMessage = async (data: WebsocketMessage) => {
-	console.log(data);
-
 	try {
 		switch (data.type) {
 			case 'newMessage':
-				console.log('message');
-
 				if (activeChannel.channelId === data.data.message.channelId) {
-					console.log('[WS] Got new message');
+					logInfo('[WS] Got new message');
 					pushMessage(data.data.message);
 				}
 				break;
 			case 'newAttachment':
 				if (activeChannel.channelId === data.data.message.channelId) {
-					console.log('[WS] Got new message');
+					logInfo('[WS] Got new message');
 					pushMessage(data.data.message);
 				}
+				break;
+			case 'newChannel':
+				if (activeServer.serverURL === data.serverURL) {
+					logInfo('[WS] Got new channel');
+					pushChannel(data.data.channel);
+				}
+				break;
+			case 'deletedChannel':
+				if (activeServer.serverURL === data.serverURL) {
+					deleteChannel(data.data.channelId);
+				}
+				break;
 		}
 	} catch (e) {
-		console.log('[WS] Got non JSON message');
+		logError('[WS] Got non JSON message', e);
 		return;
 	}
 };

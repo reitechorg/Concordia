@@ -1,10 +1,10 @@
-import chalk from "chalk";
-import runHTTPServer from "./modules/router.js";
-import updateHandler from "./modules/update.js";
-import { loadServerIcon } from "./lib/serverIcon.js";
+import runHTTPServer from './modules/router.js';
+import updateHandler from './modules/update.js';
+import { loadServerIcon } from './lib/serverIcon.js';
+import { logInfo, logWarn } from './lib/logger.js';
 
 if (process.env.DEV) {
-	console.log(chalk.blue("Running in DEV mode"));
+	logWarn('Running in DEV mode');
 }
 
 // Load icon
@@ -14,11 +14,14 @@ loadServerIcon();
 runHTTPServer();
 
 // Start update handler
-if (process.env.AUTO_UPDATE !== "false") {
+if (process.env.AUTO_UPDATE !== 'false') {
 	updateHandler();
-	setInterval(() => {
-		updateHandler();
-	}, 1000 * 60 * 60 * 25); // 25 hours
+	setInterval(
+		() => {
+			updateHandler();
+		},
+		1000 * 60 * 60 * 25,
+	); // 25 hours
 }
 
-console.log(chalk.green.bold("[MAIN] [INFO] Server started!"));
+logInfo('[MAIN] Server started!');

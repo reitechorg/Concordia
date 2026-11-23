@@ -1,11 +1,9 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import db from "../../modules/database.js";
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
-import log from "../../lib/log.js";
-import { isCuid } from "@paralleldrive/cuid2";
-import { safeUser } from "../../lib/safeData.js";
-
+import { FastifyReply, FastifyRequest } from 'fastify';
+import db from '../../modules/database.js';
+import crypto from 'crypto';
+import { isCuid } from '@paralleldrive/cuid2';
+import { safeUser } from '../../lib/safeData.js';
+import { logInfo } from '../../lib/logger.js';
 
 type BodyType = {
 	publicKey: string;
@@ -14,11 +12,14 @@ type BodyType = {
 	profileUrl?: string;
 };
 
-export default async function ApiRegister(req: FastifyRequest<{ Body: BodyType }>, res: FastifyReply) {
+export default async function ApiRegister(
+	req: FastifyRequest<{ Body: BodyType }>,
+	res: FastifyReply,
+) {
 	const { username, cuid, publicKey, profileUrl } = req.body;
 
 	// Make sure cuid is a valid cuid
-	if (!isCuid(cuid)) return res.status(400).send({ message: "Invalid cuid!" });
+	if (!isCuid(cuid)) return res.status(400).send({ message: 'Invalid cuid!' });
 
 	// TODO validate public key
 
@@ -29,7 +30,7 @@ export default async function ApiRegister(req: FastifyRequest<{ Body: BodyType }
 		},
 	});
 
-	if (user) return res.status(400).send({ message: "User already exists!" });
+	if (user) return res.status(400).send({ message: 'User already exists!' });
 
 	// Create new user
 	const newUser = await db.user.create({
@@ -45,11 +46,11 @@ export default async function ApiRegister(req: FastifyRequest<{ Body: BodyType }
 	const token = await db.token.create({
 		data: {
 			userId: newUser.id,
-			token: crypto.randomBytes(64).toString("hex"),
+			token: crypto.randomBytes(64).toString('hex'),
 		},
 	});
 
-	log(`New user ${newUser.name}`, "Register", "INFO");
+	logInfo(`[Register] New user ${newUser.name}`);
 
 	return res.send({ status: 200, token: token.token, user: safeUser(newUser) });
 }
