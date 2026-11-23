@@ -8,12 +8,7 @@ const generateRsaKeyPair = async (keyId: string) => {
 };
 
 export const signWithRsaKey = async (payload: string, keyId: string) => {
-	throw new Error('Not implemented'); // TODO: Replace with Electrons API
-	// const result = await invoke<string>('sign_with_rsa', {
-	// 	payload,
-	// 	keyId,
-	// });
-	// return result;
+	return window.rsa.sign(payload, keyId);
 };
 
 const getPublicRsaKey = async (keyId: string) => {
@@ -21,8 +16,7 @@ const getPublicRsaKey = async (keyId: string) => {
 };
 
 const deleteRsaKeyPair = async (keyId: string) => {
-	throw new Error('Not implemented'); // TODO: Replace with Electrons API
-	// await invoke('delete_rsa_key', { keyId });
+	return window.rsa.delete(keyId);
 };
 
 const listRsaKeyIds = async () => {
@@ -36,7 +30,6 @@ function saveIdentities(identities: RsaIdentity[]) {
 }
 
 export function listIdentities() {
-	getPublicRsaKey('qmcsfilh6e72lybmsdfp3hej');
 	try {
 		const dataFromStorage = localStorage.getItem('identities') || '[]';
 		const identities: RsaIdentity[] = JSON.parse(dataFromStorage);

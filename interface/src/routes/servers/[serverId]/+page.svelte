@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { Server } from "../../../types/LocalData";
-	import type { Message } from "../../../types/Message";
-	import IconSettings from "~icons/lucide/chevron-down";
-	import IconClose from "~icons/lucide/x";
+	import type { Server } from '../../../types/LocalData';
+	import type { Message } from '../../../../../core/types/Message';
+	import IconSettings from '~icons/lucide/chevron-down';
+	import IconClose from '~icons/lucide/x';
 
-	import { getChannels } from "./serverCache";
-	import ChatWindow from "../../../components/chat/chatWindow.svelte";
-	import ChannelList from "../../../components/server/channelList.svelte";
-	import { goto } from "$app/navigation";
-	import { serverList } from "../../../components/servers/getServers.svelte";
-	import { page } from "$app/state";
-	import MessageBox from "../../../components/chat/messageBox.svelte";
-	import { activeChannel, messages } from "../../../components/store.svelte";
-	import ServerActions from "./ServerActions.svelte";
+	import { getChannels } from './serverCache';
+	import ChatWindow from '../../../components/chat/chatWindow.svelte';
+	import ChannelList from '../../../components/server/channelList.svelte';
+	import { goto } from '$app/navigation';
+	import { serverList } from '../../../components/servers/getServers.svelte';
+	import { page } from '$app/state';
+	import MessageBox from '../../../components/chat/messageBox.svelte';
+	import { activeChannel, messages } from '../../../components/store.svelte';
+	import ServerActions from './ServerActions.svelte';
 
 	let server: Server | undefined = $state(undefined);
 	// let messages: Awaited<Message[]> = $state([]);
@@ -29,11 +29,11 @@
 		lastParam = serverId;
 
 		// Make sure we have servers
-		if (servers.length === 0) return goto("/servers");
+		if (servers.length === 0) return goto('/servers');
 
 		// Get the selected server
-		const selectedServer = servers.find((server) => server.id == serverId) ?? servers[0];
-		if (!selectedServer) return goto("/servers");
+		const selectedServer = servers.find(server => server.id == serverId) ?? servers[0];
+		if (!selectedServer) return goto('/servers');
 
 		// Get the channels
 		selectedServer.channels = (await getChannels(selectedServer)) ?? [];
@@ -43,7 +43,8 @@
 		activeChannel.channelId = selectedServer?.channels[0]?.id;
 
 		// If we got a  channel, get the messages
-		if (activeChannel.channelId) messages.messages = await getMessages(selectedServer!, activeChannel.channelId);
+		if (activeChannel.channelId)
+			messages.messages = await getMessages(selectedServer!, activeChannel.channelId);
 		return 0;
 	}
 
@@ -82,7 +83,7 @@
 	}
 
 	function handleKeyboard(e: KeyboardEvent) {
-		if (e.code === "Escape") {
+		if (e.code === 'Escape') {
 			e.preventDefault();
 
 			if (isServerEditOpen) {
@@ -95,19 +96,24 @@
 <svelte:window onkeydown={handleKeyboard} />
 
 {#if server !== undefined}
-	<div class="max-w-full flex h-full w-full gap-2">
-		<div id="sidebar" class="min-w-40 w-40 flex flex-col py-1">
-			<div class="w-full relative">
-				<button onclick={toggleServerEdit} class="w-full rounded rounded-tr-lg p-1 outline-0">
-					<div class="flex justify-between font-semibold w-full cursor-pointer text-left overflow-ellipsis overflow-hidden overflow">
+	<div class="flex h-full w-full max-w-full gap-2">
+		<div id="sidebar" class="flex w-40 min-w-40 flex-col py-1">
+			<div class="relative w-full">
+				<button
+					onclick={toggleServerEdit}
+					class="w-full rounded rounded-tr-lg p-1 outline-0">
+					<div
+						class="overflow flex w-full cursor-pointer justify-between overflow-hidden text-left font-semibold overflow-ellipsis">
 						{(server as Server).name}
 						{#if isServerEditOpen}
-							<IconClose class="text-sm mt-0.5" />
+							<IconClose class="mt-0.5 text-sm" />
 						{:else}
-							<IconSettings class="text-sm mt-0.5" />
+							<IconSettings class="mt-0.5 text-sm" />
 						{/if}
 					</div>
-					<p class="text-sm text-left max-h-10 overflow-hidden overflow-elipsis text-neutral-500" title={server.description}>
+					<p
+						class="overflow-elipsis max-h-10 overflow-hidden text-left text-sm text-neutral-500"
+						title={server.description}>
 						{server.description}
 					</p>
 				</button>
@@ -117,25 +123,30 @@
 					<ServerActions {closeServerEdit} {server} />
 				{/if}
 			</div>
-			<div class=" w-full h-full overflow-auto mt-1 rounded">
-				<ChannelList channels={server!.channels} {selectChannel} selectedChannel={activeChannel.channelId} />
+			<div class=" mt-1 h-full w-full overflow-auto rounded">
+				<ChannelList
+					channels={server!.channels}
+					{selectChannel}
+					selectedChannel={activeChannel.channelId} />
 			</div>
 			<!-- User card -->
-			<div class="w-full h-20 bg-zinc-900 rounded rounded-br-lg mt-1">
+			<div class="mt-1 h-20 w-full rounded rounded-br-lg bg-zinc-900">
 				<!-- Will do... one day.$$ -->
 			</div>
 		</div>
 		{#if activeChannel.channelId}
 			{#key activeChannel.channelId}
-				<div class="flex flex-col w-full pb-2">
+				<div class="flex w-full flex-col pb-2">
 					<ChatWindow messages={messages.messages} />
 					<MessageBox {server} channelId={activeChannel.channelId} />
 				</div>
 			{/key}
 		{:else}
-			<div class="flex flex-col justify-center content-center w-full h-full">
+			<div class="flex h-full w-full flex-col content-center justify-center">
 				<h1 class="text-center font-bold">No channels found</h1>
-				<h2 class="text-center">Please contact the server administrator if you believe this to be wrong</h2>
+				<h2 class="text-center">
+					Please contact the server administrator if you believe this to be wrong
+				</h2>
 			</div>
 		{/if}
 	</div>

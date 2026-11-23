@@ -1,7 +1,7 @@
 // TODO: Replace with electron version
 
 // import { LazyStore } from "@tauri-apps/plugin-store";
-import type { Message } from '../types/Message';
+import type { Message } from '../../../core/types/Message';
 // import { LazyStore } from "@tauri-apps/plugin-store";
 // import type { Message } from "../types/Message";
 

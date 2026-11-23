@@ -1,55 +1,48 @@
-import { FastifyReply } from "fastify";
-import db from "../../modules/database.js";
-import { RequestWithUser } from "../../types/RequestWithUser.js";
-import { connections } from "../../lib/handleMessage.js";
-import fileUpload from "../../lib/fileUpload.js";
+import { FastifyReply } from 'fastify';
+import db from '../../modules/database.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
+import { connections } from '../../lib/handleMessage.js';
+import fileUpload from '../../lib/fileUpload.js';
 
 interface Body {
 	message: any;
 	poll: any;
 }
 
-export default async function ApiSendMessage(
-	req: RequestWithUser,
-	res: FastifyReply,
-) {
+export default async function ApiSendMessage(req: RequestWithUser, res: FastifyReply) {
 	const { id } = req.params as { id: string };
 	const { message, poll } = req.body as Body;
 
 	const files = await fileUpload(req, res);
 
 	if (!message && files.length === 0 && !poll)
-		return res.status(400).send("No message or file provided");
+		return res.status(400).send('No message or file provided');
 
 	let pollData: {
 		question: string;
 		options: string[];
-	} = { question: "", options: [] };
+	} = { question: '', options: [] };
 
 	try {
 		console.log(poll);
 		if (poll) pollData = JSON.parse(poll.value);
 	} catch (e) {
-		return res.status(400).send("Invalid poll data");
+		return res.status(400).send('Invalid poll data');
 	}
 
 	// Validate poll
 	if (poll) {
 		if (pollData.options.length > 6 || pollData.options.length < 2)
-			return res.status(400).send("Poll must have between 2 and 6 options");
+			return res.status(400).send('Poll must have between 2 and 6 options');
 		if (pollData.question.length > 128)
-			return res
-				.status(400)
-				.send("Poll question must be less than 128 characters");
-		if (pollData.options.some((option) => option.length > 128))
-			return res
-				.status(400)
-				.send("Poll options must be less than 128 characters");
+			return res.status(400).send('Poll question must be less than 128 characters');
+		if (pollData.options.some(option => option.length > 128))
+			return res.status(400).send('Poll options must be less than 128 characters');
 	}
 
 	const newMessage = await db.message.create({
 		data: {
-			text: message?.value ?? "",
+			text: message?.value ?? '',
 			channel: {
 				connect: {
 					id: id,
@@ -61,18 +54,18 @@ export default async function ApiSendMessage(
 				},
 			},
 			files: {
-				connect: files?.map((file) => ({ id: file.id })) || [],
+				connect: files?.map(file => ({ id: file.id })) || [],
 			},
 			polls: {
 				create: poll
 					? {
 							title: pollData.question,
 							options: {
-								create: pollData.options.map((option) => ({
+								create: pollData.options.map(option => ({
 									title: option,
 								})),
 							},
-					  }
+						}
 					: undefined,
 			},
 		},
@@ -89,10 +82,12 @@ export default async function ApiSendMessage(
 		},
 	});
 
-	connections.forEach((connection) => {
+	connections.forEach(connection => {
+		console.log('Updating connection');
+
 		connection.send(
 			JSON.stringify({
-				type: "newMessage",
+				type: 'newMessage',
 				data: {
 					serverUrl: connection.url,
 					channelId: id,

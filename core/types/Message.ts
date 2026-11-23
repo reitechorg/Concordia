@@ -1,4 +1,4 @@
-import type { Member } from "./Member";
+import type { Member } from '../../interface/src/types/Member';
 
 export type Message = {
 	id: string;
@@ -6,8 +6,8 @@ export type Message = {
 	files: File[];
 	authorId: string;
 	channelId: string;
-	createdAt: "2025-03-03T10:34:59.591Z";
-	updatedAt: "2025-03-03T10:34:59.591Z";
+	createdAt: '2025-03-03T10:34:59.591Z';
+	updatedAt: '2025-03-03T10:34:59.591Z';
 	author: Member;
 };
 
