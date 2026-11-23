@@ -24,7 +24,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v6
             - name: Install Node.js and pnpm
-              uses: pnpm/setup@v6
+              uses: pnpm/setup@v3
               with:
                   version: 10
                   runtime: node@26
