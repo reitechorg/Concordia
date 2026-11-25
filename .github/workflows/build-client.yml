@@ -37,6 +37,7 @@ jobs:
                       client/dist/*.exe
                       client/dist/*.deb
                       client/dist/*.dmg
+                      client/dist/*.pacman
 
     release:
         needs: build
