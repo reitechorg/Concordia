@@ -1,7 +1,9 @@
 import { websockets } from './create.js';
 
 export default function closeAll() {
-	websockets.forEach(ws => {
-		ws.close();
-	});
+	let socket = websockets.pop();
+	while (socket !== undefined) {
+		socket.ws.close();
+		socket = websockets.pop();
+	}
 }

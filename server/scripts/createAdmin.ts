@@ -1,7 +1,6 @@
 import { Permissions, PermissionState } from '@prisma/client.js';
 import db from '../src/modules/database.js';
 import bcrypt from 'bcryptjs';
-import chalk from 'chalk';
 import { logError, logInfo } from '../src/lib/logger.js';
 
 const createAdmin = async () => {

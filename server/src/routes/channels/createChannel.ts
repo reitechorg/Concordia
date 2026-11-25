@@ -1,15 +1,19 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyReply } from 'fastify';
 import db from '../../modules/database.js';
 import { UpdateConnections } from '../../lib/handleMessage.js';
 import { logInfo } from '../../lib/logger.js';
+import hasPermission from '../../lib/hasPermission.js';
+import { Permissions } from '../../generated/client.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
 
 interface Body {
 	title: string;
 	description: string;
 }
 
-export default async function ApiCreateChannel(req: FastifyRequest, res: FastifyReply) {
-	// TODO add permissions
+export default async function ApiCreateChannel(req: RequestWithUser, res: FastifyReply) {
+	if (!hasPermission(req.user, Permissions.CHANNEL_CREATE))
+		return res.send({ status: 401, message: 'Missing permissions' });
 
 	const { title, description } = req.body as Body;
 

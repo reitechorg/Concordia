@@ -1,15 +1,23 @@
 import { BrowserWindow, net } from 'electron';
 import { logError, logInfo } from '../../utils/logger.js';
 
-export var websockets: Electron.WebSocket[] = [];
+export var websockets: {
+	server: string;
+	ws: Electron.WebSocket;
+}[] = [];
 
 export default function CreateWebSocket(server: string, win: BrowserWindow) {
+	if (websockets.some(x => x.server === server)) return;
+
 	const ws = new net.WebSocket(`${server}/ws`);
 	logInfo(`Creating WS ${server}/ws`);
 
 	ws.onopen = () => {
 		logInfo(`WS connected ${server}/ws`);
-		websockets.push(ws);
+		websockets.push({
+			server: server,
+			ws: ws,
+		});
 	};
 
 	ws.onerror = () => {
