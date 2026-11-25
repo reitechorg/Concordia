@@ -1,7 +1,7 @@
 {
-	"name": "concordia-client",
-	"version": "1.0.0",
-	"description": "",
+	"name": "concordia",
+	"version": "0.0.2",
+	"description": "Client for Concordia-server instance(s)",
 	"type": "module",
 	"main": "dist/main.js",
 	"scripts": {
@@ -11,7 +11,11 @@
 		"dev": "concurrently \"pnpm watch-typescript\" \"pnpm watch-electron\""
 	},
 	"keywords": [],
-	"author": "",
+	"author": {
+		"name": "REItech",
+		"email": "info@reitech.org"
+	},
+	"homepage": "https://reitech.org/creations/concordia",
 	"license": "ISC",
 	"packageManager": "pnpm@12.15.0",
 	"devDependencies": {
@@ -27,8 +31,8 @@
 		"express": "^5.3.0",
 		"typescript": "^7.0.2"
 	},
+	"desktopName": "concordia",
 	"build": {
-		"asar": false,
 		"appId": "com.reitech.concordia",
 		"files": [
 			"dist/main.js",
@@ -78,8 +82,10 @@
 		"linux": {
 			"target": [
 				"AppImage",
-				"deb"
-			]
+				"deb",
+				"pacman"
+			],
+			"category": "Network"
 		}
 	}
 }
