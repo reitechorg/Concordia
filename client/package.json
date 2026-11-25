@@ -74,6 +74,12 @@
 					]
 				}
 			]
+		},
+		"linux": {
+			"target": [
+				"AppImage",
+				"deb"
+			]
 		}
 	}
 }
