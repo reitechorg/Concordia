@@ -12,10 +12,17 @@
 
 	let channelId = '';
 
-	export function handleContextMenu(event: any) {
+	export function handleContextMenu(event: PointerEvent) {
 		event.preventDefault();
 
-		channelId = event.target.getAttribute('data-id');
+		let target = event.target as HTMLElement;
+		if (target.tagName.toLowerCase() == 'p') target = target.parentElement as HTMLElement;
+		if (target.tagName.toLowerCase() == 'svg') {
+			target = target.parentElement as HTMLElement;
+			target = target.parentElement as HTMLElement;
+		}
+
+		channelId = target.getAttribute('data-id')!;
 
 		x = event.clientX;
 		y = event.clientY;

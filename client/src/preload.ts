@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('rsa', {
 
 contextBridge.exposeInMainWorld('ws', {
 	connect: (server: string) => ipcRenderer.invoke('ws:connect', server),
+	closeAll: () => ipcRenderer.send('ws:closeAll'),
 	message: (callback: (value: any) => {}) =>
 		ipcRenderer.on('ws:message', (_event, value) => {
 			callback(value);

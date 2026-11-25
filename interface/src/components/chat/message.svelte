@@ -20,7 +20,7 @@
 	{#if !hideAuthor}
 		<div class="mt-3 mb-1 flex items-center">
 			{#if message.author.profileUrl}
-				<img src={message.author.profileUrl} alt="" />
+				<img src={message.author.profileUrl} class="h-8 w-8 rounded" alt="" />
 			{:else}
 				<div
 					class="flex h-8 w-8 items-center justify-center rounded bg-purple-700 font-bold">

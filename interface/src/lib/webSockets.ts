@@ -31,8 +31,6 @@ window.ws.message((val: WebsocketMessage) => {
 });
 
 const handleWebsocketMessage = async (data: WebsocketMessage) => {
-	console.log(data);
-
 	try {
 		switch (data.type) {
 			case 'newMessage':

@@ -3,7 +3,6 @@
 	import type { Message } from '../../../../../core/types/Message';
 	import IconSettings from '~icons/lucide/chevron-down';
 	import IconClose from '~icons/lucide/x';
-
 	import { getChannels } from './serverCache';
 	import ChatWindow from '../../../components/chat/chatWindow.svelte';
 	import ChannelList from '../../../components/server/channelList.svelte';
@@ -15,6 +14,8 @@
 	import ServerActions from './ServerActions.svelte';
 	import ContextMenu from '../../../components/server/channelContextMenu.svelte';
 	import { activeServer } from '../../../components/store.svelte';
+	import { listIdentities } from '$lib/identityManagement';
+	import apiRequest from '$lib/apiRequest';
 
 	// svelte-ignore non_reactive_update
 	let contextMenu: any;
@@ -30,6 +31,9 @@
 	$effect(() => {
 		getData(parseInt(page.params.serverId));
 	});
+
+	let user: null | { username: string; description: string; profileUrl: null | string } =
+		$state(null);
 
 	async function getData(serverId: number) {
 		// Prevents infinite loop
@@ -54,10 +58,28 @@
 		server = selectedServer;
 		activeChannel.channelId = selectedServer?.channels[0]?.id;
 
+		// Get current identity
+		getIdentity(server);
+
 		// If we got a channel, get the messages
 		if (activeChannel.channelId)
 			messages.messages = await getMessages(selectedServer!, activeChannel.channelId);
 		return 0;
+	}
+
+	async function getUser(server: Server) {
+		const data = await apiRequest('GET', `${server.serverUrl}/user`, null, server.token);
+		return data.data.profileUrl;
+	}
+
+	async function getIdentity(server: Server) {
+		const identities = listIdentities();
+		const activeIdentity = identities.find(i => i.id == server.identityId);
+		user = {
+			username: activeIdentity!.user!.username,
+			description: activeIdentity!.user!.username,
+			profileUrl: await getUser(server),
+		};
 	}
 
 	let isServerEditOpen = $state(false);
@@ -150,10 +172,21 @@
 			<!-- User card -->
 			<div
 				class="mt-1 flex h-16 w-full items-center gap-2 rounded rounded-br-lg bg-zinc-900 p-2">
-				<div class="h-12 w-12 overflow-hidden rounded bg-red-500"></div>
+				<div class="h-12 w-12 overflow-hidden rounded bg-red-500">
+					{#if user?.profileUrl != null}
+						<img src={user.profileUrl} alt="Identity icon" />
+					{/if}
+
+					{#if user != null && user?.profileUrl == null}
+						<div
+							class="flex h-full w-full items-center justify-center rounded bg-purple-700 text-xl font-bold">
+							{user.username.slice(0, 2)}
+						</div>
+					{/if}
+				</div>
 				<div class="flex flex-col">
-					<p>Fox123</p>
-					<p>Online</p>
+					<p>{user?.username}</p>
+					<p>{user?.description}</p>
 				</div>
 			</div>
 		</div>

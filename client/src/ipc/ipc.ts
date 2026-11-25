@@ -4,6 +4,7 @@ import GetPublicRSA from './rsa/get.js';
 import CreateRSAKeys from './rsa/create.js';
 import DeleteRSAKeys from './rsa/delete.js';
 import CreateWebSocket from './websockets/create.js';
+import CloseAllWebSockets from './websockets/close.js';
 
 export function RegisterIPC(win: BrowserWindow) {
 	// RSA
@@ -26,5 +27,9 @@ export function RegisterIPC(win: BrowserWindow) {
 	// websockets
 	ipcMain.handle('ws:connect', (_event, server: string) => {
 		return CreateWebSocket(server, win);
+	});
+
+	ipcMain.on('ws:closeAll', _event => {
+		return CloseAllWebSockets();
 	});
 }

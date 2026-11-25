@@ -10,6 +10,7 @@ declare global {
 		};
 
 		ws: {
+			closeAll: () => void;
 			connect: (server: string) => WebSocket;
 			message: (msg: any) => void;
 		};
