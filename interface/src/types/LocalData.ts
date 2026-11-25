@@ -1,3 +1,5 @@
+import type { RsaIdentity } from './RsaIdentity';
+
 export type LocalData = {
 	servers: Server[];
 };
@@ -12,6 +14,7 @@ export type Server = {
 	username: string;
 	token: string;
 	channels: Channel[];
+	identity: RsaIdentity | null;
 };
 
 export type Channel = {

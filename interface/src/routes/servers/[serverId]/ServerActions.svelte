@@ -5,6 +5,8 @@
 	import logoutFromServer from '$lib/logoutFromServer';
 	import { goto } from '$app/navigation';
 	import StyledButton from '../../../components/core/styledButton.svelte';
+	import { hasPermission } from '$lib/permissions/hasPermission';
+	import { Permissions } from '../../../../../server/src/generated/enums';
 
 	const { closeServerEdit, server } = $props();
 
@@ -23,9 +25,7 @@
 			func: () => {
 				console.log("HAHA you thought I'd finish my code? Silly you");
 			},
-			hasPermissions: () => {
-				return true;
-			},
+			hasPermissions: () => hasPermission(Permissions.SERVER_UPDATE),
 		},
 		{
 			title: 'Leave server',

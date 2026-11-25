@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
+	import { goto } from '$app/navigation';
 
-	import type { Server } from "../../types/LocalData";
-	import { page } from "$app/state";
+	import type { Server } from '../../types/LocalData';
+	import { page } from '$app/state';
 
 	type Props = {
 		server: Server;
@@ -10,28 +10,44 @@
 
 	const { server }: Props = $props();
 	const changeServer = () => {
-		goto("/servers/" + server.id);
+		goto('/servers/' + server.id);
 	};
 
 	const isActive = $derived(page.params.serverId === `${server.id}`);
 	const hasNewMessages = false; // TODO
 </script>
 
-<button class="cursor-pointer w-10 h-10 flex relative group" onclick={changeServer}>
+<button class="group relative flex h-10 w-10 cursor-pointer" onclick={changeServer}>
 	<!-- Message indicator -->
-	<div class="absolute w-1 h-full top-0 -left-2.5 flex items-center justify-centers">
-		<div class={`w-full bg-white rounded-full transition-all ${isActive ? "h-full" : hasNewMessages ? "h-1/3 group-hover:h-2/3" : "h-0 group-hover:h-2/3"}`}></div>
+	<div class="justify-centers absolute top-0 -left-2.5 flex h-full w-1 items-center">
+		<div
+			class={`w-full rounded-full bg-white transition-all ${isActive ? 'h-full' : hasNewMessages ? 'h-1/3 group-hover:h-2/3' : 'h-0 group-hover:h-2/3'}`}>
+		</div>
 	</div>
 
 	<!-- Identity indicator -->
-	<!-- <div class="absolute w-2 h-2 top-1 right-1 bg-white rounded-full"></div> -->
+	<div class="absolute right-[-1px] bottom-[-3px] h-4 w-4 rounded bg-white">
+		<div
+			class="flex h-full w-full items-center justify-center rounded bg-purple-700 text-[0.5rem] font-bold">
+			{server.identity!.user.username.slice(0, 2)}
+		</div>
+	</div>
 
 	<!-- Server icon -->
-	<div class="w-full h-full">
+	<div class="h-full w-full">
 		{#if server.iconUrl}
-			<img src={server.iconUrl} alt={server.name} class="flew w-10 h-10 {isActive ? 'rounded-lg' : 'rounded-xl'} hover:rounded-lg overflow-hidden object-cover transition-all" draggable="false" />
+			<img
+				src={server.iconUrl}
+				alt={server.name}
+				class="flew h-10 w-10 {isActive
+					? 'rounded-lg'
+					: 'rounded-xl'} overflow-hidden object-cover transition-all hover:rounded-lg"
+				draggable="false" />
 		{:else}
-			<div class="flex items-center justify-center bg-teal-500 text-white font-bold {isActive ? 'rounded-lg' : 'rounded-xl'} hover:rounded-lg w-full h-full">
+			<div
+				class="flex items-center justify-center bg-teal-500 font-bold text-white {isActive
+					? 'rounded-lg'
+					: 'rounded-xl'} h-full w-full hover:rounded-lg">
 				<p class="text-center">
 					{server.name[0]}{server.name[1].toLowerCase()}
 				</p>
@@ -40,11 +56,12 @@
 	</div>
 
 	<!-- Server name -->
-	<div class="absolute top-1/2 left-10 transform -translate-y-1/2 flex items-center invisible group-hover:visible">
-		<div class="w-3 h-3 bg-black transfrom rotate-45 ml-1.5 -mr-2"></div>
-		<div class="bg-black px-2 py-1 rounded-md z-10 text-left">
-			<div class="text-sm text-white text-nowrap">{server.name}</div>
-			<div class="text-xs text-neutral-400 text-nowrap">{server.username}</div>
+	<div
+		class="invisible absolute top-1/2 left-10 flex -translate-y-1/2 transform items-center group-hover:visible">
+		<div class="transfrom -mr-2 ml-1.5 h-3 w-3 rotate-45 bg-black"></div>
+		<div class="z-10 rounded-md bg-black px-2 py-1 text-left">
+			<div class="text-sm text-nowrap text-white">{server.name}</div>
+			<div class="text-xs text-nowrap text-neutral-400">{server.username}</div>
 		</div>
 	</div>
 </button>
