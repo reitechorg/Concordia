@@ -16,6 +16,7 @@
 	import { activeServer } from '../../../components/store.svelte';
 	import { listIdentities } from '$lib/identityManagement';
 	import apiRequest from '$lib/apiRequest';
+	import { user as permUser } from '$lib/permissions/hasPermission';
 
 	// svelte-ignore non_reactive_update
 	let contextMenu: any;
@@ -69,6 +70,7 @@
 
 	async function getUser(server: Server) {
 		const data = await apiRequest('GET', `${server.serverUrl}/user`, null, server.token);
+		permUser.roles = data.data.roles;
 		return data.data.profileUrl;
 	}
 

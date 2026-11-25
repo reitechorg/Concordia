@@ -2,7 +2,7 @@ import { FastifyReply } from 'fastify';
 import db from '../../modules/database.js';
 import hasPermission from '../../lib/hasPermission.js';
 import { RequestWithUser } from '../../types/RequestWithUser.js';
-import { Permission, Permissions } from '@prisma/client';
+import { Permission, Permissions } from '../../generated/client.js';
 import unauthorized from '../../lib/noPermission.js';
 import { logInfo } from '../../lib/logger.js';
 

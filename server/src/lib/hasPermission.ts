@@ -1,13 +1,10 @@
-import { Permissions, PermissionState } from "@prisma/client";
-import { SafeUser } from "../types/RequestWithUser.js";
+import { Permissions, PermissionState } from '../generated/client.js';
+import { SafeUser } from '../types/RequestWithUser.js';
 
-export default function hasPermission(
-	user: SafeUser,
-	lookupPermission: Permissions,
-) {
-	return user.roles.some((role) =>
+export default function hasPermission(user: SafeUser, lookupPermission: Permissions) {
+	return user.roles.some((role: { permissions: any[] }) =>
 		role.permissions.some(
-			(permission) =>
+			permission =>
 				permission.permission === lookupPermission &&
 				permission.state === PermissionState.ALLOW,
 		),

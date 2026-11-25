@@ -39,6 +39,9 @@ const createWindow = () => {
 		},
 	});
 
+	win.autoHideMenuBar = false;
+	win.menuBarVisible = false;
+
 	if (isDev) {
 		win.loadURL('http://localhost:1420');
 		logWarn('Running in development mode');
