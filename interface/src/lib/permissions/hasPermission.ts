@@ -1,4 +1,4 @@
-import { Permissions } from '../../../../server/src/generated/enums';
+import { Permissions } from '../../generated/enums';
 
 export const user = { roles: [] };
 

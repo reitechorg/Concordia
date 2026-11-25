@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import StyledButton from '../../../components/core/styledButton.svelte';
 	import { hasPermission } from '$lib/permissions/hasPermission';
-	import { Permissions } from '../../../../../server/src/generated/enums';
+	import { Permissions } from '../../../generated/enums';
 
 	const { closeServerEdit, server } = $props();
 
