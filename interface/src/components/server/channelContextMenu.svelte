@@ -3,7 +3,7 @@
 	import CreateChannelModal from './createChannelModal.svelte';
 	import { deleteChannel as DeleteChannel } from '$lib/channels/deleteChannel';
 	import { hasPermission } from '$lib/permissions/hasPermission';
-	import { Permissions } from '../../../../server/src/generated/enums';
+	import { Permissions } from '../../generated/enums';
 	let { server } = $props();
 
 	let visible = $state(false);
