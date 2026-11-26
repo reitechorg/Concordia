@@ -4,9 +4,6 @@
 	"description": "Client for Concordia-server instance(s)",
 	"type": "module",
 	"main": "dist/main.js",
-	"repository": {
-		"url": "reitechorg/concordia"
-	},
 	"scripts": {
 		"build-typescript": "tsc",
 		"watch-typescript": "tsc --watch",
