@@ -15,6 +15,8 @@
 	import ContextMenu from '../../../components/server/channelContextMenu.svelte';
 	import { activeServer } from '../../../components/store.svelte';
 	import UserCard from '../../../components/core/UserCard.svelte';
+	import { user as permUser } from '$lib/permissions/hasPermission';
+	import apiRequest from '$lib/apiRequest';
 
 	// svelte-ignore non_reactive_update
 	let contextMenu: any;
@@ -54,6 +56,8 @@
 		server = selectedServer;
 		activeChannel.channelId = selectedServer?.channels[0]?.id;
 
+		await getUser(server);
+
 		// If we got a channel, get the messages
 		if (activeChannel.channelId)
 			messages.messages = await getMessages(selectedServer!, activeChannel.channelId);
@@ -91,6 +95,12 @@
 
 		messages.messages = await getMessages(server!, channelId);
 		activeChannel.channelId = channelId;
+	}
+
+	async function getUser(server: Server) {
+		const data = await apiRequest('GET', `${server.serverUrl}/user`, null, server.token);
+		permUser.roles = data.data.roles;
+		return data.data.profileUrl;
 	}
 
 	// Update channel in case of change by channel being deleted
