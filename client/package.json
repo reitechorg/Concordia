@@ -63,9 +63,6 @@
 			}
 		],
 		"win": {
-			"publish": [
-				"github"
-			],
 			"target": [
 				{
 					"target": "nsis",
@@ -76,9 +73,6 @@
 			]
 		},
 		"mac": {
-			"publish": [
-				"github"
-			],
 			"target": [
 				{
 					"target": "dmg",
@@ -89,9 +83,6 @@
 			]
 		},
 		"linux": {
-			"publish": [
-				"github"
-			],
 			"target": [
 				"AppImage",
 				"deb",
