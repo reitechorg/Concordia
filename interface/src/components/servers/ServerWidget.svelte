@@ -26,11 +26,18 @@
 	</div>
 
 	<!-- Identity indicator -->
-	<div class="absolute right-[-1px] bottom-[-3px] h-4 w-4 rounded bg-white">
-		<div
-			class="flex h-full w-full items-center justify-center rounded bg-purple-700 text-[0.5rem] font-bold">
-			{server.identity!.user.username.slice(0, 2)}
-		</div>
+	<div class="absolute right-[-1px] bottom-[-3px] h-4 w-4 overflow-hidden rounded">
+		{#if server.identity!.user.profilePictureUrl !== null && server.identity!.user.profilePictureUrl !== undefined}
+			<img
+				src={server.identity!.user.profilePictureUrl}
+				alt="Identity icon"
+				class="h-full w-full object-cover" />
+		{:else}
+			<div
+				class="flex h-full w-full items-center justify-center rounded bg-purple-700 text-[0.5rem] font-bold">
+				{server.identity!.user.username.slice(0, 2)}
+			</div>
+		{/if}
 	</div>
 
 	<!-- Server icon -->

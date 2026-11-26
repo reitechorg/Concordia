@@ -38,7 +38,7 @@ export default async function ApiRegister(
 			id: cuid,
 			name: username,
 			publicKey: publicKey,
-			profileUrl,
+			profileUrl: profileUrl === undefined ? null : Buffer.from(profileUrl, 'utf-8'),
 		},
 	});
 

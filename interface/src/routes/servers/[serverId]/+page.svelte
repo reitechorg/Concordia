@@ -174,7 +174,7 @@
 			<!-- User card -->
 			<div
 				class="mt-1 flex h-16 w-full items-center gap-2 rounded rounded-br-lg bg-zinc-900 p-2">
-				<div class="h-12 w-12 overflow-hidden rounded bg-red-500">
+				<div class="h-12 w-12 overflow-hidden rounded">
 					{#if user?.profileUrl != null}
 						<img src={user.profileUrl} alt="Identity icon" />
 					{/if}

@@ -42,6 +42,7 @@ import { logError, logInfo, logWarn } from '../lib/logger.js';
 export default async function runHTTPServer() {
 	const fastify = Fastify({
 		logger: process.env.DEV ? true : false,
+		bodyLimit: 20 * 1024 * 1024,
 	});
 
 	// Register cors
