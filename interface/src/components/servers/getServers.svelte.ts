@@ -13,8 +13,6 @@ async function loadServers() {
 
 const initServerListStorage = () => {
 	loadServers();
-	console.log(serverList.servers);
-
 	$effect(() => {
 		localStorage.setItem('servers', JSON.stringify(serverList.servers));
 	});

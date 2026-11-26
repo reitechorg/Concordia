@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { parseMarkdownToHtml } from '$lib/markdown';
-	// import { openUrl } from "@tauri-apps/plugin-opener";
 	import type { Message as MessageType } from '../../../../core/types/Message';
 
 	import IconLink from '~icons/lucide/square-arrow-out-up-right';
@@ -19,15 +18,22 @@
 <div class="mx-2 rounded pl-2.5 hover:bg-neutral-900">
 	{#if !hideAuthor}
 		<div class="mt-3 mb-1 flex items-center">
-			{#if message.author.profileUrl}
-				<img src={message.author.profileUrl} class="h-8 w-8 rounded" alt="" />
+			{#if message.author === null}
+				<div
+					class="flex h-8 w-8 items-center justify-center rounded bg-purple-700 font-bold">
+					De
+				</div>
+			{:else if message.author!.profileUrl}
+				<img src={message.author!.profileUrl} class="h-8 w-8 rounded" alt="" />
 			{:else}
 				<div
 					class="flex h-8 w-8 items-center justify-center rounded bg-purple-700 font-bold">
-					{message.author.name.slice(0, 2)}
+					{message.author!.name.slice(0, 2)}
 				</div>
 			{/if}
-			<h1 class="ml-2 font-semibold">{message.author.name}</h1>
+			<h1 class="ml-2 font-semibold">
+				{message.author !== null ? message.author!.name : 'Deleted user'}
+			</h1>
 		</div>
 	{/if}
 

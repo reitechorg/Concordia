@@ -1,8 +1,11 @@
 {
 	"name": "concrodia",
-	"version": "0.1.0",
+	"version": "0.0.3",
 	"description": "",
 	"type": "module",
+	"repository": {
+		"url": "reitechorg/concordia"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",

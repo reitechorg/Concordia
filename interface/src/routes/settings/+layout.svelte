@@ -1,27 +1,27 @@
 <script lang="ts">
 	const { children } = $props();
-	import "@fontsource-variable/funnel-sans";
-	import SideBar from "../../components/settings/sideBar.svelte";
-	import { goto } from "$app/navigation";
-	import ArrowBack from "~icons/lucide/arrow-left";
-	import { popHistory } from "$lib/history";
+	import SideBar from '../../components/settings/sideBar.svelte';
+	import { goto } from '$app/navigation';
+	import ArrowBack from '~icons/lucide/arrow-left';
+	import { popHistory } from '$lib/history';
+	import { version } from '$app/environment';
 
 	const escKeyHandler = (e: KeyboardEvent) => {
-		if (e.key === "Escape") {
+		if (e.key === 'Escape') {
 			e.preventDefault();
 			exitSettings();
 		}
 	};
 
 	const exitSettings = () => {
-		goto(popHistory() ?? "/");
+		goto(popHistory() ?? '/');
 	};
 </script>
 
 <svelte:document onkeydown={escKeyHandler} />
 
 <main>
-	<div class="w-full bg-zinc-800 flex items-center justify-start gap-5 pt-1 px-4 pb-0.5 mb-1.5">
+	<div class="mb-1.5 flex w-full items-center justify-start gap-5 bg-zinc-800 px-4 pt-1 pb-0.5">
 		<button class="cursor-pointer" onclick={exitSettings}>
 			<ArrowBack />
 		</button>
@@ -30,10 +30,12 @@
 	<div class="flex">
 		<SideBar />
 
-		<div class="px-4 py-2 w-full">
+		<div class="w-full px-4 py-2">
 			{@render children()}
 		</div>
 	</div>
+
+	<div class="absolute bottom-2 w-full text-center text-sm text-zinc-600">v{version}</div>
 </main>
 
 <style>

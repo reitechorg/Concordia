@@ -4,9 +4,11 @@
 	import Leave from '../../../components/icons/LeaveIcon.svelte';
 	import logoutFromServer from '$lib/logoutFromServer';
 	import { goto } from '$app/navigation';
-	import StyledButton from '../../../components/core/styledButton.svelte';
+	import IconButton from '../../../components/core/iconButton.svelte';
 	import { hasPermission } from '$lib/permissions/hasPermission';
 	import { Permissions } from '../../../generated/enums';
+	import PfpIcon from '../../../components/icons/PfpIcon.svelte';
+	import { sendPfpUpdate } from '$lib/pfp/sendPfpUpdate';
 
 	const { closeServerEdit, server } = $props();
 
@@ -20,10 +22,20 @@
 
 	let actions: action[] = [
 		{
+			title: 'Update pfp',
+			icon: PfpIcon,
+			func: () => {
+				sendPfpUpdate(server);
+				closeServerEdit();
+			},
+			hasPermissions: () => true,
+		},
+		{
 			title: 'Server settings',
 			icon: Settings,
 			func: () => {
 				console.log("HAHA you thought I'd finish my code? Silly you");
+				closeServerEdit();
 			},
 			hasPermissions: () => hasPermission(Permissions.SERVER_UPDATE),
 		},
@@ -41,17 +53,16 @@
 </script>
 
 <div
-	class="absolute top-9 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 transform bg-zinc-800">
+	class="absolute top-9 left-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 transform bg-[#161616]">
 </div>
 <div
-	class="absolute top-9 flex w-full flex-col gap-1 rounded-lg bg-zinc-800 p-2"
+	class="absolute top-9 left-1/2 flex w-52 -translate-x-1/2 flex-col gap-1 rounded-lg bg-[#161616] p-1 text-sm"
 	use:clickOutside={() => {
 		closeServerEdit();
 	}}>
 	{#each actions.filter(action => action.hasPermissions()) as action}
-		<StyledButton onclick={action.func} dangerous={action.danger}>
+		<IconButton onclick={action.func} dangerous={action.danger} title={action.title}>
 			<action.icon />
-			{action.title}
-		</StyledButton>
+		</IconButton>
 	{/each}
 </div>

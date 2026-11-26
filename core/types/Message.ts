@@ -8,7 +8,7 @@ export type Message = {
 	channelId: string;
 	createdAt: '2025-03-03T10:34:59.591Z';
 	updatedAt: '2025-03-03T10:34:59.591Z';
-	author: Member;
+	author?: Member;
 };
 
 export type File = {

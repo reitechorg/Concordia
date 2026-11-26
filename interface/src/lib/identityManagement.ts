@@ -1,5 +1,4 @@
 import { createId } from '@paralleldrive/cuid2';
-// import { invoke } from "@tauri-apps/api/core";
 import type { RsaIdentity, UserDefaults } from '../types/RsaIdentity';
 
 // RSA key fuctions
@@ -25,7 +24,7 @@ const listRsaKeyIds = async () => {
 };
 
 // Identity functions
-function saveIdentities(identities: RsaIdentity[]) {
+export function saveIdentities(identities: RsaIdentity[]) {
 	localStorage.setItem('identities', JSON.stringify(identities));
 }
 
@@ -42,6 +41,8 @@ export function listIdentities() {
 
 export function getIdentity(identityId: string) {
 	const identities = listIdentities();
+	console.log(identities);
+
 	const identity = identities.find(identity => identity.id === identityId);
 	return identity;
 }
@@ -66,4 +67,12 @@ export async function createIdentity(defaultUserProperties: UserDefaults) {
 	identities.push(identity);
 	saveIdentities(identities);
 	return identity;
+}
+
+export async function setIdentityPicture(identityId: string, newPfp: string) {
+	const identities = listIdentities();
+	const index = identities.findIndex(identity => identity.id == identityId);
+	if (index == -1) return;
+	identities[index].user.profilePictureUrl = newPfp;
+	saveIdentities(identities);
 }

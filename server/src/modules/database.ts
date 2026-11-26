@@ -1,17 +1,17 @@
-import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import { PrismaClient } from "@prisma/client.js";
-import dotenv from "dotenv";
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaClient } from '@prisma/client.js';
+import dotenv from 'dotenv';
 dotenv.config();
 
 function parseMysqlConnectionString(conn: string) {
 	// Ensure URL has a scheme so the URL parser can handle it
-	const normalized = conn.startsWith("mysql://") ? conn : "mysql://" + conn;
+	const normalized = conn.startsWith('mysql://') ? conn : 'mysql://' + conn;
 
 	const regexp = /\/\/([^:/?#]+)(?::(.+))?@([^:/?#]+)(?::(\d+))?\/([^/?#]+)/;
 
 	const data = regexp.exec(conn);
 
-	if (!data) throw new Error("Invalid DATABASE_URL!");
+	if (!data) throw new Error('Invalid DATABASE_URL!');
 
 	return {
 		user: data[1],
@@ -38,5 +38,34 @@ const db = new PrismaClient({ adapter }).$extends({
 			},
 		},
 	},
+	query: {
+		$allModels: {
+			async $allOperations({ args, query }) {
+				const result = await query(args);
+				return convertBytesToStrings(result);
+			},
+		},
+	},
 });
+
+function convertBytesToStrings(obj: any): any {
+	if (obj === null || obj === undefined) return obj;
+
+	if (obj instanceof Uint8Array) {
+		return Buffer.from(obj).toString('utf-8');
+	}
+
+	if (Array.isArray(obj)) {
+		return obj.map(convertBytesToStrings);
+	}
+
+	if (typeof obj === 'object') {
+		return Object.fromEntries(
+			Object.entries(obj).map(([key, value]) => [key, convertBytesToStrings(value)]),
+		);
+	}
+
+	return obj;
+}
+
 export default db;

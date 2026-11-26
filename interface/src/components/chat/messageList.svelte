@@ -11,5 +11,5 @@
 {#each messages as message, index}
 	<Message
 		{message}
-		hideAuthor={!(index === 0 || message.author.id !== messages[index - 1]?.author.id)} />
+		hideAuthor={!(index === 0 || message.authorId !== messages[index - 1]?.authorId)} />
 {/each}
