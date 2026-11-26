@@ -1,16 +1,14 @@
-// import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { openJoinServerPage } from '../routes/servers/join/joinController.svelte';
+import { logInfo } from './logger';
 
-export async function initDeeplinks() {
-	// TODO: Replace with Electrons API
-	// await onOpenUrl((urls) => {
-	// 	urls.forEach((url) => {
-	// 		handleUrl(url);
-	// 	});
-	// });
+export function initDeepLinks() {
+	window.dl.open((link: string) => {
+		handleUrl(link);
+	});
 }
 
-function handleUrl(url: string) {
+export function handleUrl(url: string) {
+	logInfo('Trying to open:', url);
 	const parsedUrl = new URL(url);
 
 	if (parsedUrl.hostname === 'join') {

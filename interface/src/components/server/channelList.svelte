@@ -10,7 +10,9 @@
 		onclick={() => selectChannel(channel.id)}
 		style={channel.id === selectedChannel ? 'background-color: #FFFFFF33;' : ''}
 		class="my-0.5 flex w-full cursor-pointer gap-1 rounded bg-neutral-950 px-2 py-1 text-start text-sm font-light">
-		<ChatIcon />
+		<div class="h-5 w-5">
+			<ChatIcon />
+		</div>
 		<p class="first-letter:uppercase">
 			{channel.title}
 		</p>

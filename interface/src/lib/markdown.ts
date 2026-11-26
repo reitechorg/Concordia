@@ -1,22 +1,40 @@
-import insane, { type SanitizeOptions } from "insane";
-import { parseEmoji } from "./emoji";
+import insane, { type SanitizeOptions } from 'insane';
+import { parseEmoji } from './emoji';
 
 const escapeHtml = (unsafe: string) => {
-	if (unsafe) return unsafe.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-	return "";
+	if (unsafe)
+		return unsafe
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')
+			.replaceAll('"', '&quot;')
+			.replaceAll("'", '&#039;');
+	return '';
 };
 
 const parseMakrdown = (markdown: string) => {
 	return (
 		markdown
 			// New Line
-			.replaceAll(/(?:\r\n|\r|\n)/g, "<br />")
+			.replaceAll(/(?:\r\n|\r|\n)/g, '<br />')
 
 			// [Link](https://www.example.com)
-			.replaceAll(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-blue-400 underline" title="$2">$1</a>')
+			.replaceAll(
+				/\[(.*?)\]\((.*?)\)/g,
+				'<a href="$2" target="_blank" class="text-blue-400 underline" title="$2">$1</a>',
+			)
+
+			// http(s)://example.com
+			.replaceAll(
+				/^(https?:\/\/\S*)|^(HTTPS?:\/\/\S*)/g,
+				'<a href="$1" target="_blank" class="text-blue-400 underline" title="$2">$1</a>',
+			)
 
 			// __***underline bold italics***__
-			.replaceAll(/__\*\*\*(.*?)\*\*\*__/g, '<span class="underline font-bold italic">$1</span>')
+			.replaceAll(
+				/__\*\*\*(.*?)\*\*\*__/g,
+				'<span class="underline font-bold italic">$1</span>',
+			)
 
 			// ***bold italics***
 			.replaceAll(/\*\*\*(.*?)\*\*\*/g, '<span class="italic font-bold">$1</span>')
@@ -46,13 +64,13 @@ const parseMakrdown = (markdown: string) => {
 
 const insaneConfig: SanitizeOptions = {
 	allowedAttributes: {
-		a: ["href", "class", "target", "title"],
-		span: ["class"],
-		img: ["class", "dragable", "src", "alt"],
+		a: ['href', 'class', 'target', 'title'],
+		span: ['class'],
+		img: ['class', 'dragable', 'src', 'alt'],
 	},
 	allowedClasses: {},
-	allowedSchemes: ["http", "https"],
-	allowedTags: ["br", "a", "span", "img"],
+	allowedSchemes: ['http', 'https'],
+	allowedTags: ['br', 'a', 'span', 'img'],
 };
 
 export function parseMarkdownToHtml(markdown: string): string {

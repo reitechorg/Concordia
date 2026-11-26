@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import ApiMessages from '../routes/messages/getMessages.js';
-import ApiUser from '../routes/users/user.js';
+import { ApiUser, ApiUpdateUser } from '../routes/users/user.js';
 import ApiSendMessage from '../routes/messages/sendMessage.js';
 import ApiLogin from '../routes/auth/login.js';
 import ApiRegister from '../routes/auth/register.js';
@@ -126,6 +126,7 @@ export default async function runHTTPServer() {
 	//
 	authGet('/users', ApiUsers);
 	authGet('/user', ApiUser);
+	authPost('/user', ApiUpdateUser);
 
 	// Token management
 	authDelete('/logout', ApiDeleteToken); // Logout

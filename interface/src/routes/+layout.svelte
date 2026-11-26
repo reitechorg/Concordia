@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { initDeeplinks } from '$lib/deepLink';
+	import { initDeepLinks } from '$lib/deepLink';
 	import { registerUpdateCheckerEffect } from '$lib/updater.svelte';
 	import initWebSockets from '$lib/webSockets';
 	import { onMount } from 'svelte';
@@ -22,7 +22,7 @@
 
 	unlisten();
 	initServerListStorage();
-	initDeeplinks();
+	initDeepLinks();
 	initWebSockets();
 	registerUpdateCheckerEffect();
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { parseMarkdownToHtml } from '$lib/markdown';
-	// import { openUrl } from "@tauri-apps/plugin-opener";
 	import type { Message as MessageType } from '../../../../core/types/Message';
 
 	import IconLink from '~icons/lucide/square-arrow-out-up-right';

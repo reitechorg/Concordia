@@ -1,6 +1,4 @@
-<div class="h-6 w-6">
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
-		><!--!Font Awesome Pro v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path
-			fill="currentColor"
-			d="M568.9 337.4L587.4 320L568.9 302.6C455.6 195.6 394.2 137.6 384.4 128.4L384.4 256.1L224.4 256.1L224.4 384.1L384.4 384.1L384.4 511.8C394.1 502.6 455.6 444.5 568.9 337.6zM224.5 160L256.5 160L256.5 96L64.5 96L64.5 544L256.5 544L256.5 480L128.5 480L128.5 160L224.5 160z" /></svg>
-</div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+	><!--!Font Awesome Pro v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2026 Fonticons, Inc.--><path
+		fill="currentColor"
+		d="M224.3 160L256.3 160L256.3 96L64.3 96L64.3 544L256.3 544L256.3 480L128.3 480L128.3 160L224.3 160zM566.9 342.6L589.5 320L566.9 297.4L438.9 169.4L416.3 146.8L371 192.1C377.6 198.7 409.6 230.7 467 288.1L224.3 288.1L224.3 352.1L467 352.1L371 448.1L416.3 493.4L566.9 342.8z" /></svg>

@@ -24,7 +24,7 @@ const listRsaKeyIds = async () => {
 };
 
 // Identity functions
-function saveIdentities(identities: RsaIdentity[]) {
+export function saveIdentities(identities: RsaIdentity[]) {
 	localStorage.setItem('identities', JSON.stringify(identities));
 }
 
@@ -41,6 +41,8 @@ export function listIdentities() {
 
 export function getIdentity(identityId: string) {
 	const identities = listIdentities();
+	console.log(identities);
+
 	const identity = identities.find(identity => identity.id === identityId);
 	return identity;
 }
