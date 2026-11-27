@@ -3,6 +3,8 @@ import { Permissions } from '../../generated/enums';
 export const user = { roles: [] };
 
 export function hasPermission(checkPerm: Permissions): boolean {
+	console.log(user.roles);
+
 	return user.roles.some((role: any) =>
 		role.permissions.some(
 			(permission: any) =>

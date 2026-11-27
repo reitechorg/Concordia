@@ -23,6 +23,11 @@ tasks:
         cmds:
             - npx electron-builder build
 
+    publish:
+        deps: [ts-build]
+        cmds:
+            - npx electron-builder --publish always
+
     install:
         cmds:
             - pnpm install

@@ -1,6 +1,6 @@
 {
 	"name": "concordia",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Client for Concordia-server instance(s)",
 	"type": "module",
 	"main": "dist/main.js",
@@ -9,6 +9,9 @@
 		"watch-typescript": "tsc --watch",
 		"watch-electron": "nodemon --watch dist --exec electron ./dist/main.js",
 		"dev": "concurrently \"pnpm watch-typescript\" \"pnpm watch-electron\""
+	},
+	"repository": {
+		"url": "https://github.com/reitechorg/Concordia"
 	},
 	"keywords": [],
 	"author": {
@@ -25,9 +28,10 @@
 		"nodemon": "^3.1.14"
 	},
 	"dependencies": {
+		"chalk": "^6.0.1",
 		"electron-reload": "2.0.0-alpha.1",
 		"electron-store": "^12.0.0",
-		"chalk": "^6.0.1",
+		"electron-updater": "^6.8.11",
 		"express": "^5.3.0",
 		"typescript": "^7.0.2"
 	},
@@ -40,6 +44,13 @@
 			{
 				"from": "dist/ipc",
 				"to": "dist/ipc",
+				"filter": [
+					"**/*"
+				]
+			},
+			{
+				"from": "dist/updates",
+				"to": "dist/updates",
 				"filter": [
 					"**/*"
 				]
@@ -60,6 +71,9 @@
 			}
 		],
 		"win": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				{
 					"target": "nsis",
@@ -70,6 +84,9 @@
 			]
 		},
 		"mac": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				{
 					"target": "dmg",
@@ -80,6 +97,9 @@
 			]
 		},
 		"linux": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				"AppImage",
 				"deb",

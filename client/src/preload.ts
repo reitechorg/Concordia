@@ -32,3 +32,12 @@ contextBridge.exposeInMainWorld('dl', {
 			callback(value);
 		}),
 });
+
+contextBridge.exposeInMainWorld('update', {
+	available: (callback: () => {}) => {
+		ipcRenderer.on('update:available', _event => {
+			callback();
+		});
+	},
+	install: () => ipcRenderer.invoke('update:install'),
+});

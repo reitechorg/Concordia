@@ -31,38 +31,6 @@ jobs:
             - name: Setup task
               uses: go-task/setup-task@v2
             - name: Build interface & app
-              run: task install build
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: build-${{matrix.os}}
-                  path: |
-                      client/dist/*.AppImage
-                      client/dist/*.snap
-                      client/dist/*.exe
-                      client/dist/*.deb
-                      client/dist/*.dmg
-                      client/dist/*.pacman
-
-    release:
-        needs: build
-        runs-on: ubuntu-latest
-        permissions:
-            contents: write
-
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v6
-            - name: Download artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  path: client/dist
-                  merge-multiple: true
-            - name: Upload to GitHub
+              run: task install publish
               env:
-                  GH_TOKEN: ${{ github.token }}
-              run: |
-                  gh release create "$GITHUB_REF_NAME" \
-                  --title "$GITHUB_REF_NAME" \
-                  --generate-notes \
-                  client/dist/*
+                  GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
