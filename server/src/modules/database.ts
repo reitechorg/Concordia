@@ -51,6 +51,10 @@ const db = new PrismaClient({ adapter }).$extends({
 function convertBytesToStrings(obj: any): any {
 	if (obj === null || obj === undefined) return obj;
 
+	if (obj instanceof Date) {
+		return obj;
+	}
+
 	if (obj instanceof Uint8Array) {
 		return Buffer.from(obj).toString('utf-8');
 	}

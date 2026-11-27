@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import db from "../../modules/database.js";
-import { RequestWithUser } from "../../types/RequestWithUser.js";
+import { FastifyReply, FastifyRequest } from 'fastify';
+import db from '../../modules/database.js';
+import { RequestWithUser } from '../../types/RequestWithUser.js';
 
 export default async function ApiMessages(req: RequestWithUser, res: FastifyReply) {
 	const { id } = req.params as { id: string };
@@ -41,10 +41,10 @@ export default async function ApiMessages(req: RequestWithUser, res: FastifyRepl
 		},
 	});
 
-	messages.forEach((message) => {
+	messages.forEach(message => {
 		if (message.polls.length > 0) {
-			message.polls[0].options.forEach((option) => {
-				option.votes.forEach((vote) => {
+			message.polls[0].options.forEach(option => {
+				option.votes.forEach(vote => {
 					if (vote.userId == req.user!.id) {
 						//@ts-ignore
 						option.voted = true;

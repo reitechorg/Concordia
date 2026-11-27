@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { emojiFromDecCodepoint, getEmojiSvgFromCodepoint, hexCodepointFromDec, type EmojiMetadata } from "../../lib/emoji";
+	import {
+		emojiFromDecCodepoint,
+		getEmojiSvgFromCodepoint,
+		hexCodepointFromDec,
+		type EmojiMetadata,
+	} from '../../lib/emoji';
 
 	type Props = {
 		emoji: EmojiMetadata;
@@ -17,7 +22,9 @@
 	}
 </script>
 
-<button class="w-12 h-12 flex justify-center items-center hover:bg-zinc-600 p-1 rounded cursor-pointer" onclick={handleClick}>
+<button
+	class="flex h-8 w-8 cursor-pointer items-center justify-center rounded p-1 hover:bg-zinc-600"
+	onclick={handleClick}>
 	{#await svg}
 		{emojiCharacter}
 	{:then svgcode}

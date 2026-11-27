@@ -1,14 +1,14 @@
 <script lang="ts">
-	import SendButton from '~icons/lucide/send';
 	import type { Server } from '../../types/LocalData';
-	import IconFile from '~icons/lucide/file';
-	import IconImage from '~icons/lucide/image';
-	import IconPool from '~icons/lucide/chart-pie';
-	import IconSwords from '~icons/lucide/swords';
-	import IconEmoji from '~icons/lucide/smile';
 	import EmojiKeyboard from '../emoji/EmojiKeyboard.svelte';
 	import Attachment from './attachment.svelte';
 	import { logInfo } from '$lib/logger';
+	import FileIcon from '../icons/FileIcon.svelte';
+	import ImageIcon from '../icons/ImageIcon.svelte';
+	import PollIcon from '../icons/PollIcon.svelte';
+	import GameIcon from '../icons/GameIcon.svelte';
+	import EmojiIcon from '../icons/EmojiIcon.svelte';
+	import SendIcon from '../icons/SendIcon.svelte';
 	type Props = {
 		server: Server;
 		channelId: string;
@@ -126,14 +126,19 @@
 					class="w-full px-4 py-2 text-white outline-0" />
 				<button
 					onclick={toggleEmojiKeyboard}
-					class="flex cursor-pointer flex-col items-center justify-center hover:text-white">
-					<IconEmoji />
+					class="flex cursor-pointer flex-col items-center justify-center text-neutral-300 transition-all duration-200 hover:text-white">
+					<div class="h-6 w-6">
+						<EmojiIcon />
+					</div>
 				</button>
 				<button
 					onclick={sendMessage}
 					class="m-1 flex h-10 w-10 flex-col items-center justify-center rounded bg-zinc-800"
 					class:color={message.length > 0 || attachments.length > 0}>
-					<SendButton class="cursor-pointer text-white" />
+					<div
+						class="h-5 w-5 cursor-pointer text-neutral-300 transition-all duration-200 hover:text-white">
+						<SendIcon />
+					</div>
 				</button>
 			</div>
 		</div>
@@ -141,27 +146,35 @@
 		<!-- Tools -->
 		<div class="flex gap-2 px-0 py-2">
 			<button
-				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 hover:bg-zinc-900 hover:text-white"
+				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 transition-all duration-200 hover:bg-zinc-900 hover:text-white"
 				onclick={() => logInfo('TODO')}>
-				<IconImage />
+				<div class="h-4 w-4">
+					<ImageIcon />
+				</div>
 				GIF
 			</button>
 			<button
-				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 hover:bg-zinc-900 hover:text-white"
+				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 transition-all duration-200 hover:bg-zinc-900 hover:text-white"
 				onclick={() => logInfo('TODO')}>
-				<IconPool />
+				<div class="h-4 w-4">
+					<PollIcon />
+				</div>
 				Poll
 			</button>
 			<button
-				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 hover:bg-zinc-900 hover:text-white"
+				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 transition-all duration-200 hover:bg-zinc-900 hover:text-white"
 				onclick={() => logInfo('TODO')}>
-				<IconSwords />
+				<div class="h-4 w-4">
+					<GameIcon />
+				</div>
 				Game
 			</button>
 			<button
-				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 hover:bg-zinc-900 hover:text-white"
+				class="flex cursor-pointer items-center gap-2 rounded-full border-1 border-dashed px-3 py-1 text-xs text-neutral-300 transition-all duration-200 hover:bg-zinc-900 hover:text-white"
 				onclick={trrigetAttachment}>
-				<IconFile />
+				<div class="h-4 w-4">
+					<FileIcon />
+				</div>
 				Attachment
 			</button>
 		</div>
@@ -169,7 +182,7 @@
 
 	<!-- Emoji Keyboard -->
 	{#if isEmojiKeyboardVisible}
-		<div class="transfrom absolute -top-1 right-5 h-100 -translate-y-full">
+		<div class="transfrom absolute -top-1 right-5 h-80 w-80 -translate-y-full">
 			<EmojiKeyboard onselect={insertEmoji} close={closeEmojiKeyboard} />
 		</div>
 	{/if}

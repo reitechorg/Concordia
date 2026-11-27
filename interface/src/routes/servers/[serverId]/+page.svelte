@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Server } from '../../../types/LocalData';
 	import type { Message } from '../../../../../core/types/Message';
-	import IconSettings from '~icons/lucide/chevron-down';
-	import IconClose from '~icons/lucide/x';
 	import { getChannels } from './serverCache';
 	import ChatWindow from '../../../components/chat/chatWindow.svelte';
 	import ChannelList from '../../../components/server/channelList.svelte';
@@ -17,6 +15,8 @@
 	import UserCard from '../../../components/core/UserCard.svelte';
 	import { user as permUser } from '$lib/permissions/hasPermission';
 	import apiRequest from '$lib/apiRequest';
+	import { fade } from 'svelte/transition';
+	import ChevronUp from '../../../components/icons/ChevronUp.svelte';
 
 	// svelte-ignore non_reactive_update
 	let contextMenu: any;
@@ -132,11 +132,10 @@
 					<div
 						class="overflow flex w-full cursor-pointer justify-between overflow-hidden text-left font-semibold overflow-ellipsis">
 						{(server as Server).name}
-						{#if isServerEditOpen}
-							<IconClose class="mt-0.5 text-sm" />
-						{:else}
-							<IconSettings class="mt-0.5 text-sm" />
-						{/if}
+						<div
+							class={`mt-0.5 h-4 w-4 ${!isServerEditOpen ? '-rotate-180' : ''} transition-all duration-150`}>
+							<ChevronUp />
+						</div>
 					</div>
 					<p
 						class="overflow-elipsis max-h-10 overflow-hidden text-left text-sm text-neutral-500"
@@ -147,7 +146,9 @@
 
 				<!-- Server edit menu -->
 				{#if isServerEditOpen}
-					<ServerActions {closeServerEdit} {server} />
+					<div transition:fade={{ duration: 100 }}>
+						<ServerActions {closeServerEdit} {server} />
+					</div>
 				{/if}
 			</div>
 			<div class="mt-1 h-full w-full overflow-auto rounded" oncontextmenu={openContextMenu}>

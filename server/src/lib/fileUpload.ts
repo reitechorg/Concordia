@@ -6,7 +6,14 @@ import { RequestWithUser } from '../types/RequestWithUser.js';
 import path from 'node:path';
 import { logWarn } from './logger.js';
 
-const acceptTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/json'];
+const acceptTypes = [
+	'image/jpeg',
+	'image/png',
+	'image/webp',
+	'application/json',
+	'text/plain',
+	'text/x-shellscript',
+];
 
 type Options = {
 	savePath?: string;
@@ -42,6 +49,7 @@ export default async function fileUpload(
 	// Process all files
 	await Promise.all(
 		data.map(async file => {
+			console.log(file.mimetype);
 			// Make sure filetype is accepted
 			if (options?.acceptTypes && !options.acceptTypes.includes(file.mimetype))
 				return errorUnsuported(res, file.mimetype); // Check for overriden types

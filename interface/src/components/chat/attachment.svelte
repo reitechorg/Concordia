@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { formatBytes } from '$lib/formater';
 	import { logInfo } from '$lib/logger';
-	import IconFile from '~icons/lucide/file';
-	import IconTrash from '~icons/lucide/trash';
+	import FileIcon from '../icons/FileIcon.svelte';
 
 	type Props = {
 		attachment: File;
@@ -35,7 +34,9 @@
 				class="h-full w-full rounded-lg object-cover"
 				draggable="false" />
 		{:else}
-			<IconFile class="text-white" />
+			<div class="h-6 w-6">
+				<FileIcon />
+			</div>
 		{/if}
 	</div>
 	<div>

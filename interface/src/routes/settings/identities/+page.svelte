@@ -1,13 +1,11 @@
 <script>
 	import { listIdentities, saveIdentities } from '$lib/identityManagement';
-	import { logError, logInfo } from '$lib/logger';
 	import StyledButton from '../../../components/core/styledButton.svelte';
 	import ExportIcon from '../../../components/icons/ExportIcon.svelte';
 	import ImportIcon from '../../../components/icons/ImportIcon.svelte';
+	import PlusIcon from '../../../components/icons/PlusIcon.svelte';
 	import AddIdentityModal from './addIdentityModal.svelte';
 	import IdentityCard from './IdentityCard.svelte';
-
-	import Add from '~icons/lucide/plus';
 
 	let open = $state(false);
 	let identities = $state(listIdentities());
@@ -97,8 +95,10 @@
 	{/each}
 	<button
 		onclick={createIdentity}
-		class="flex cursor-pointer items-center justify-center rounded bg-zinc-900 p-2">
-		<Add />
+		class="flex cursor-pointer items-center justify-center gap-2 rounded bg-zinc-900 p-2">
+		<div class="mb-0.5 h-5 w-5">
+			<PlusIcon />
+		</div>
 		<p>Add an identity</p>
 	</button>
 </div>

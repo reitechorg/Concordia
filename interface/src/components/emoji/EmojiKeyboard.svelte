@@ -1,23 +1,22 @@
 <script lang="ts">
-	import EmojiList from "./EmojiList.svelte";
-	import EmojiOrdering from "./emojiOrdering.json";
-
-	import IconSmile from "~icons/lucide/smile";
-	import IconPeople from "~icons/lucide/users";
-	import IconAnimals from "~icons/lucide/paw-print";
-	import IconFood from "~icons/lucide/apple";
-	import IconTravel from "~icons/lucide/plane";
-	import IconActivities from "~icons/lucide/bike";
-	import IconObjects from "~icons/lucide/box";
-	import IconSymbols from "~icons/lucide/asterisk";
-	import IconFlag from "~icons/lucide/flag";
-	import IconSearch from "~icons/lucide/search";
-	import { autoFocus } from "$lib/use/autoFocus.svelte";
-	import type { EmojiMetadata } from "$lib/emoji";
-	import { clickOutside } from "$lib/use/clickOutside.svelte";
+	import EmojiList from './EmojiList.svelte';
+	import EmojiOrdering from './emojiOrdering.json';
+	import { autoFocus } from '$lib/use/autoFocus.svelte';
+	import type { EmojiMetadata } from '$lib/emoji';
+	import { clickOutside } from '$lib/use/clickOutside.svelte';
+	import SearchIcon from '../icons/emoji/SearchIcon.svelte';
+	import SmileIcon from '../icons/emoji/SmileIcon.svelte';
+	import PeopleIcon from '../icons/emoji/PeopleIcon.svelte';
+	import PawIcon from '../icons/emoji/PawIcon.svelte';
+	import FoodIcon from '../icons/emoji/FoodIcon.svelte';
+	import TravelIcon from '../icons/emoji/TravelIcon.svelte';
+	import ActivitiesIcon from '../icons/emoji/ActivitiesIcon.svelte';
+	import ObjectsIcon from '../icons/emoji/ObjectsIcon.svelte';
+	import SymbolsIcon from '../icons/emoji/SymbolsIcon.svelte';
+	import FlagIcon from '../icons/emoji/FlagIcon.svelte';
 
 	let activeGroup = $state<number>(0);
-	let searchQuery = $state<string>("");
+	let searchQuery = $state<string>('');
 	let scrollContainer: HTMLElement;
 
 	type Props = {
@@ -26,10 +25,20 @@
 	};
 	let { onselect, close }: Props = $props();
 
-	const groupIcons = [IconSmile, IconPeople, IconAnimals, IconFood, IconTravel, IconActivities, IconObjects, IconSymbols, IconFlag];
+	const groupIcons = [
+		SmileIcon,
+		PeopleIcon,
+		PawIcon,
+		FoodIcon,
+		TravelIcon,
+		ActivitiesIcon,
+		ObjectsIcon,
+		SymbolsIcon,
+		FlagIcon,
+	];
 
 	const toggleGroupHandle = (index: number) => () => {
-		if (searchQuery.length > 0) searchQuery = "";
+		if (searchQuery.length > 0) searchQuery = '';
 
 		if (activeGroup === index) return;
 		scrollContainer.scrollTo({ top: 0 });
@@ -37,11 +46,11 @@
 	};
 
 	function handleKeyboard(e: KeyboardEvent) {
-		if (e.code === "Escape") {
+		if (e.code === 'Escape') {
 			e.preventDefault();
 
 			if (searchQuery.length > 0) {
-				searchQuery = "";
+				searchQuery = '';
 			} else if (close) {
 				close();
 			}
@@ -52,7 +61,11 @@
 		const normalized = query.toLowerCase().trim();
 		if (normalized.length === 0) return [];
 
-		return EmojiOrdering.flatMap((group) => group.emoji.filter((emoji) => emoji.shortcodes.some((keyword) => keyword.includes(normalized))));
+		return EmojiOrdering.flatMap(group =>
+			group.emoji.filter(emoji =>
+				emoji.shortcodes.some(keyword => keyword.includes(normalized)),
+			),
+		);
 	}
 
 	const searchResults = $derived(runSearch(searchQuery));
@@ -61,24 +74,36 @@
 <svelte:window onkeydown={handleKeyboard} />
 
 <div
-	class="h-full flex flex-col bg-zinc-800 rounded-2xl overflow-hidden"
+	class="flex h-full flex-col overflow-hidden rounded-2xl bg-zinc-800"
 	use:clickOutside={() => {
 		if (close) close();
-	}}
->
+	}}>
 	<div class="bg-zinc-900 p-2">
-		<div class="bg-zinc-950 rounded-xl flex items-center">
-			<input bind:value={searchQuery} placeholder="Search for emoji" class="w-full outline-0 py-2 px-2.5" use:autoFocus />
-			<button class="pr-2.5 cursor-pointer">
-				<IconSearch />
+		<div class="flex items-center rounded-xl bg-zinc-950">
+			<input
+				bind:value={searchQuery}
+				placeholder="Search for emoji"
+				class="w-full px-2.5 py-2 outline-0"
+				use:autoFocus />
+			<button class="cursor-pointer pr-2.5">
+				<div class="h-5 w-5">
+					<SearchIcon />
+				</div>
 			</button>
 		</div>
 	</div>
 	<div class="flex bg-zinc-900">
 		{#each EmojiOrdering as _, i}
 			{@const GroupIcon = groupIcons[i]}
-			<button onclick={toggleGroupHandle(i)} class="py-2 w-full cursor-pointer flex justify-center border-b-2 text-lg {activeGroup === i && searchQuery.length === 0 ? 'bg-zinc-700 border-(--accent-color)' : 'text-neutral-400 border-transparent hover:bg-zinc-800 hover:text-neutral-300'}">
-				<GroupIcon />
+			<button
+				onclick={toggleGroupHandle(i)}
+				class="flex w-full cursor-pointer justify-center border-b-2 py-2 text-lg {activeGroup ===
+					i && searchQuery.length === 0
+					? 'border-(--accent-color) bg-zinc-700'
+					: 'border-transparent text-neutral-400 hover:bg-zinc-800 hover:text-neutral-300'}">
+				<div class="h-6 w-6">
+					<GroupIcon />
+				</div>
 			</button>
 		{/each}
 	</div>
@@ -86,18 +111,21 @@
 		{#if searchQuery.length === 0}
 			{#key activeGroup}
 				<div class="block">
-					<div class="sticky top-0 bg-zinc-800 text-neutral-400 py-1">{EmojiOrdering[activeGroup].group}</div>
+					<div class="sticky top-0 bg-zinc-800 py-1 text-neutral-400">
+						{EmojiOrdering[activeGroup].group}
+					</div>
 					<EmojiList emojis={EmojiOrdering[activeGroup].emoji} {onselect} />
 				</div>
 			{/key}
 		{:else if searchResults.length > 0}
 			<div class="block">
-				<div class="sticky top-0 bg-zinc-800 text-neutral-400 py-1">Search results</div>
+				<div class="sticky top-0 bg-zinc-800 py-1 text-neutral-400">Search results</div>
 				<EmojiList emojis={searchResults} {onselect} />
 			</div>
 		{:else}
-			<div class="text-neutral-400 w-96 h-full flex flex-col justify-center items-center text-center">
-				<div class="text-neutral-300 font-xl font-bold">No emojis found!</div>
+			<div
+				class="flex h-full w-full flex-col items-center justify-center text-center text-neutral-400">
+				<div class="font-xl font-bold text-neutral-300">No emojis found!</div>
 				<div>Try searching for something else</div>
 			</div>
 		{/if}
