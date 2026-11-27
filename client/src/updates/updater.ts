@@ -19,11 +19,11 @@ export function initUpdates(win: BrowserWindow) {
 	});
 	autoUpdater.on('update-available', info => {
 		logInfo('New update available', info);
-		win.webContents.send('update:available');
 	});
 
 	autoUpdater.on('update-downloaded', () => {
-		autoUpdater.quitAndInstall();
+		logInfo('Update downloaded');
+		win.webContents.send('update:available');
 	});
 
 	autoUpdater.checkForUpdates();

@@ -38,6 +38,7 @@ import ApiUpdateConfig from '../routes/config/updateConfiguration.js';
 import ApiPollVote from '../routes/polls/vote.js';
 import ApiConfigAccess from '../routes/config/access.js';
 import { logError, logInfo, logWarn } from '../lib/logger.js';
+import Authenticate from '../middlewares/authenticate.js';
 
 export default async function runHTTPServer() {
 	const fastify = Fastify({
@@ -61,20 +62,21 @@ export default async function runHTTPServer() {
 
 	// Websocket handle
 	fastify.register(async function (fastify) {
-		fastify.get('/ws', { websocket: true }, socket => {
+		fastify.get('/ws', { websocket: true, preValidation: Authenticate }, socket => {
 			socket.on('message', (msg: any) => {
-				incomingMessage(msg);
+				incomingMessage(msg, socket);
 			});
 
 			socket.on('error', (e: Error) => {
 				logError('Socket failed', e);
 			});
 
-			socket.on('close', (code, reason) => {
-				logWarn('Socket closed', code, reason);
+			socket.on('close', code => {
+				if (code === 1001 || code === 1000) return;
+				logWarn('Socket closed', code);
 			});
 
-			logInfo('New connection!', socket);
+			logInfo('New connection!');
 			socket.send('Hello, world!');
 			connections.push(socket);
 		});

@@ -35,8 +35,8 @@ export function RegisterIPC(win: BrowserWindow) {
 	});
 
 	// websockets
-	ipcMain.handle('ws:connect', (_event, server: string) => {
-		return CreateWebSocket(server, win);
+	ipcMain.handle('ws:connect', (_event, server: string, token: string) => {
+		return CreateWebSocket(server, win, token);
 	});
 
 	ipcMain.on('ws:closeAll', _event => {

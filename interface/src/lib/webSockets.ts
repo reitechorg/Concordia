@@ -8,22 +8,23 @@ import {
 } from '../components/store.svelte';
 import type { WebsocketMessage } from '../../../core/types/WebsocketMessage';
 import { logError, logInfo } from './logger';
+import type { Server } from '../types/LocalData';
 
 export default function initWebSockets() {
-	const servers: string[] = [];
+	const servers: Server[] = [];
 
 	serverList.servers.forEach(server => {
-		if (!servers.includes(server.serverUrl)) servers.push(server.serverUrl);
+		if (!servers.some(s => s.serverUrl === server.serverUrl)) servers.push(server);
 	});
 
-	servers.forEach(serverUrl => {
-		const clearUrl = serverUrl.replace('http://', 'ws://').replace('https://', 'wss://');
-		createWebsocket(clearUrl);
+	servers.forEach(server => {
+		const clearUrl = server.serverUrl.replace('http://', 'ws://').replace('https://', 'wss://');
+		createWebsocket(clearUrl, server.token);
 	});
 }
 
-export function createWebsocket(server: string) {
-	return window.ws.connect(server);
+export function createWebsocket(server: string, token: string) {
+	return window.ws.connect(server, token);
 }
 
 window.ws.message((val: WebsocketMessage) => {

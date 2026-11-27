@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { deleteIdentity, getIdentity, setIdentityPicture } from '$lib/identityManagement';
 	import StyledButton from '../../../components/core/styledButton.svelte';
+	import EditIcon from '../../../components/icons/EditIcon.svelte';
 	import { serverList } from '../../../components/servers/getServers.svelte';
 	import type { RsaIdentity } from '../../../types/RsaIdentity';
 
@@ -49,7 +50,7 @@
 {:else}
 	<div class="flex justify-between rounded bg-zinc-900 p-2">
 		<div class="flex gap-2">
-			<div class="aspect-square h-20 overflow-hidden rounded">
+			<div class="relative aspect-square h-20 overflow-hidden rounded">
 				<label for={`pfp-${identity.id}`}>
 					{#if identity.user.profilePictureUrl != null}
 						<img
@@ -71,6 +72,13 @@
 					max="1"
 					accept="image/*"
 					class="hidden" />
+
+				<div
+					class="absolute right-1 bottom-1 flex h-6 w-6 flex-col items-center justify-center rounded bg-neutral-800 shadow-sm shadow-black">
+					<div class="h-4 w-4">
+						<EditIcon />
+					</div>
+				</div>
 			</div>
 			<div>
 				<div class="flex">
