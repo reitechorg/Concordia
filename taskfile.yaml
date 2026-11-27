@@ -21,6 +21,12 @@ tasks:
             - task: interface:build
             - task: client:build
 
+    publish:
+        desc: Publishes app in github actions
+        cmds:
+            - task: interface:build
+            - task: client:publish
+
     install:
         desc: Install all dependencies
         cmds:

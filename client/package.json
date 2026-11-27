@@ -10,6 +10,9 @@
 		"watch-electron": "nodemon --watch dist --exec electron ./dist/main.js",
 		"dev": "concurrently \"pnpm watch-typescript\" \"pnpm watch-electron\""
 	},
+	"repository": {
+		"url": "https://github.com/reitechorg/Concordia"
+	},
 	"keywords": [],
 	"author": {
 		"name": "REItech",
@@ -45,6 +48,13 @@
 				]
 			},
 			{
+				"from": "dist/updates",
+				"to": "dist/updates",
+				"filter": [
+					"**/*"
+				]
+			},
+			{
 				"from": "dist/build",
 				"to": "dist/build",
 				"filter": [
@@ -60,6 +70,9 @@
 			}
 		],
 		"win": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				{
 					"target": "nsis",
@@ -70,6 +83,9 @@
 			]
 		},
 		"mac": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				{
 					"target": "dmg",
@@ -80,6 +96,9 @@
 			]
 		},
 		"linux": {
+			"publish": [
+				"github"
+			],
 			"target": [
 				"AppImage",
 				"deb",
