@@ -1,5 +1,9 @@
-export async function incomingMessage(msg: Buffer) {
+import { WebSocket } from '@fastify/websocket';
+
+export async function incomingMessage(msg: Buffer, socket: WebSocket) {
 	const text = await msg.toString();
+
+	if (text === 'ping') return socket.send('pong');
 }
 
 export function UpdateConnections(
