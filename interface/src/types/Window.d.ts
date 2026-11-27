@@ -21,5 +21,10 @@ declare global {
 		dl: {
 			open: (link: any) => void;
 		};
+
+		update: {
+			available: (callback: () => void) => void;
+			install: () => boolean;
+		};
 	}
 }

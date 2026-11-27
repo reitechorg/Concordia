@@ -13,45 +13,13 @@ export const updateInfo = $state({
 	totalLength: 0,
 });
 
-// let availableUpdate: Update | null = null;
-
 export function registerUpdateCheckerEffect() {
-	$effect(() => {
-		checkForUpdates();
-		const interval = setInterval(
-			() => {
-				checkForUpdates();
-			},
-			1000 * 60 * 10,
-		);
-
-		return () => {
-			clearInterval(interval);
-		};
+	window.update.available(() => {
+		updateInfo.isAvailable = true;
 	});
 }
-
-export async function checkForUpdates() {
-	if (updateInfo.isDownloading) return;
-
-	// const update = await check();
-	// if (!update) {
-	// 	availableUpdate = null;
-	// 	updateInfo.isAvailable = false;
-	// 	return;
-	// }
-
-	// availableUpdate = update;
-	// updateInfo.isAvailable = availableUpdate.available;
-	// updateInfo.currentVersion = availableUpdate.currentVersion;
-	// updateInfo.newVersion = availableUpdate.version;
-}
-
 export async function installUpdate() {
-	// if (!availableUpdate) {
-	// 	await checkForUpdates();
-	// 	if (!availableUpdate) return;
-	// }
+	window.update.install();
 	// await availableUpdate.downloadAndInstall((event) => {
 	// 	switch (event.event) {
 	// 		case "Started":

@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import { RegisterIPC } from './ipc/ipc.js';
 import { logWarn } from './utils/logger.js';
 import OpenDeeplink from './ipc/deeplink/open.js';
+import { initUpdates } from './updates/updater.js';
 const PORT = 3000;
 
 function spaPathToFilePath(path: string): string {
@@ -57,6 +58,8 @@ if (!appLock) {
 		});
 
 		win = createWindow();
+
+		initUpdates(win);
 	});
 
 	app.on('second-instance', (event, commandLine, workingDirectory) => {
