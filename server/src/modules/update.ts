@@ -1,11 +1,12 @@
 import path from 'path';
 import fs from 'node:fs';
 import { logError, logInfo, logWarn } from '../lib/logger.js';
-import { pipeline } from 'stream/promises';
 import { Readable } from 'stream';
-import { spawnSync } from 'node:child_process';
+
+declare const __APP_VERSION__: string;
 
 const updateHandler = async () => {
+	logInfo(`Detected server version ${__APP_VERSION__}`);
 	const ServerData = JSON.parse(
 		fs.readFileSync(path.join(process.env.FILE_PATH!, 'server', '.serverdata.json')).toString(),
 	);
@@ -29,11 +30,10 @@ const updateHandler = async () => {
 		.filter((release: any) => release.tag_name.startsWith('server-'))
 		.toSorted((a: string, b: string) => a.localeCompare(b))[0];
 	const version = newestVersion.tag_name.replace('server-v', '');
-	console.log(newestVersion);
 
-	if (version === ServerData.version) return logInfo('[Updater] Server is up to date!');
+	if (version === __APP_VERSION__) return logInfo('[Updater] Server is up to date!');
 	logWarn(
-		`[Updater] Server update found! New version: ${version}, Currently running ${ServerData.version}`,
+		`[Updater] Server update found! New version: ${version}, Currently running ${__APP_VERSION__}`,
 	);
 
 	// Update server

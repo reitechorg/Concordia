@@ -166,10 +166,7 @@ const setup = async () => {
 	fs.mkdirSync(path.join(storagePath, 'upload'), { recursive: true });
 
 	if (process.env.AUTO_UPDATE !== 'false')
-		fs.writeFileSync(
-			path.join(storagePath, 'server', '.serverdata.json'),
-			`{"version":"0.0.0", "lastUpdate":0}`,
-		); // TODO check for update
+		fs.writeFileSync(path.join(storagePath, 'server', '.serverdata.json'), `{"lastUpdate":0}`);
 
 	// Admin setup
 	logInfo('[SETUP] Admin user:');

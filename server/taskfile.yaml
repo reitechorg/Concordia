@@ -11,7 +11,24 @@ tasks:
 
     build:
         cmds:
-            - pnpm  run build
+            - npx prisma generate
+            - |
+                sh -c '
+                VERSION=$(node -p "require(\"./package.json\").version")
+
+                npx esbuild \
+                src/start.ts \
+                src/index.ts \
+                --bundle \
+                --platform=node \
+                --target=node26 \
+                --external:node:* \
+                --outdir=./build \
+                --format=esm \
+                --define:__APP_VERSION__="\"$VERSION\"" \
+                --banner:js="import { createRequire } from \"node:module\"; const require = createRequire(import.meta.url);"
+                '
+            - node --build-sea sea-config.json
 
     start:
         deps: [migrate-dev]
