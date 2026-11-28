@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "npx tsx src/index.ts",
 		"dev": "cross-env DEV=true npx tsx watch src/start.ts",
-		"build": "npx esbuild src/start.ts src/index.ts --bundle --platform=node --target=node26 --external:node:* --outdir=./build --format=esm --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" && node --build-sea sea-config.json"
+		"build": "npx prisma generate && npx esbuild src/start.ts src/index.ts --bundle --platform=node --target=node26 --external:node:* --outdir=./build --format=esm --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" && node --build-sea sea-config.json"
 	},
 	"type": "module",
 	"keywords": [],
