@@ -9,6 +9,10 @@ tasks:
         cmds:
             - pnpm dev
 
+    build:
+        cmds:
+            - pnpm  run build
+
     start:
         deps: [migrate-dev]
         cmds:
