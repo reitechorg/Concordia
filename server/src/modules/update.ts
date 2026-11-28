@@ -3,24 +3,29 @@ import fs from 'node:fs';
 import { logError, logInfo, logWarn } from '../lib/logger.js';
 import { Readable } from 'stream';
 
-declare const __APP_VERSION__: string;
+declare const __APP_VERSION__: string | undefined;
+
+const VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : 'v0.0.0';
 
 const updateHandler = async () => {
-	logInfo(`Detected server version ${__APP_VERSION__}`);
-	const ServerData = JSON.parse(
-		fs.readFileSync(path.join(process.env.FILE_PATH!, 'server', '.serverdata.json')).toString(),
-	);
-	const today = new Date();
-	if (!(today.getTime() > Number.parseInt(ServerData.lastUpdate) + 86400000)) {
-		return logInfo(`[Updater] Skipping check for update, last check less than 24 hours ago`);
-	}
-	// Update last check date
-	ServerData.lastUpdate = today.getTime().toString();
+	logInfo(`[Updater] Detected server version ${VERSION}`);
 
-	fs.writeFileSync(
-		path.join(process.env.FILE_PATH!, 'server', '.serverdata.json'),
-		JSON.stringify(ServerData),
-	);
+	if (VERSION === 'v0.0.0') return logWarn('[Updater] Dev mode, ignoring updates');
+
+	// const ServerData = JSON.parse(
+	// 	fs.readFileSync(path.join(process.env.FILE_PATH!, 'server', '.serverdata.json')).toString(),
+	// );
+	// const today = new Date();
+	// if (!(today.getTime() > Number.parseInt(ServerData.lastUpdate) + 86400000)) {
+	// 	return logInfo(`[Updater] Skipping check for update, last check less than 24 hours ago`);
+	// }
+	// Update last check date
+	// ServerData.lastUpdate = today.getTime().toString();
+
+	// fs.writeFileSync(
+	// 	path.join(process.env.FILE_PATH!, 'server', '.serverdata.json'),
+	// 	JSON.stringify(ServerData),
+	// );
 
 	// Get latest release version from GitHub
 	const data = await fetch('https://api.github.com/repos/reitechorg/Concordia/releases');
@@ -28,13 +33,13 @@ const updateHandler = async () => {
 	const json = await data.json();
 	const newestVersion = json
 		.filter((release: any) => release.tag_name.startsWith('server-'))
-		.toSorted((a: string, b: string) => a.localeCompare(b))[0];
+		.toSorted((a: any, b: any) => a.tag_name.localeCompare(b.tag_name))
+		.reverse()[0];
+
 	const version = newestVersion.tag_name.replace('server-v', '');
 
-	if (version === __APP_VERSION__) return logInfo('[Updater] Server is up to date!');
-	logWarn(
-		`[Updater] Server update found! New version: ${version}, Currently running ${__APP_VERSION__}`,
-	);
+	if (version === VERSION) return logInfo('[Updater] Server is up to date!');
+	logWarn(`[Updater] Server update found! New version: ${version}, Currently running ${VERSION}`);
 
 	// Update server
 	const asset = newestVersion.assets.find((a: any) => a.name === 'concordia-server');
