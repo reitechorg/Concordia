@@ -1,0 +1,36 @@
+name: Build server
+
+on:
+    workflow_dispatch:
+    push:
+        tags:
+            - 'server-v*'
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+            - name: Install Node.js and pnpm
+              uses: pnpm/setup@v3
+              with:
+                  runtime: node@26
+                  install: false
+            - name: Setup task
+              uses: go-task/setup-task@v2
+            - name: Build interface & app
+              run: task server:build
+            - name: Upload to GitHub
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  gh release create "$GITHUB_REF_NAME" \
+                  --title "$GITHUB_REF_NAME" \
+                  --generate-notes \
+                  --draft \
+                  --latest=false \
+                  server/build/concordia-server
