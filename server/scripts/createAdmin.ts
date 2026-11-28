@@ -1,4 +1,4 @@
-import { Permissions, PermissionState } from '@prisma/client.js';
+import { Permissions, PermissionState } from '../src/generated/client.js';
 import db from '../src/modules/database.js';
 import bcrypt from 'bcryptjs';
 import { logError, logInfo } from '../src/lib/logger.js';

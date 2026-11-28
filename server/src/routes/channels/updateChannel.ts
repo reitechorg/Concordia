@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify';
 import db from '../../modules/database.js';
-import { Permission, Permissions, PermissionState } from '@prisma/client';
+import { Permission, Permissions, PermissionState } from '../../generated/client.js';
 import { RequestWithUser, SafeUser } from '../../types/RequestWithUser.js';
 import hasPermission from '../../lib/hasPermission.js';
 import { logInfo } from '../../lib/logger.js';

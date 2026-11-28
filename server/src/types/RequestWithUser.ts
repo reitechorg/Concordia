@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { FastifyRequest } from "fastify";
+import { Prisma } from '../generated/client.js';
+import { FastifyRequest } from 'fastify';
 
 type SafeUser = Prisma.UserGetPayload<{
 	include: { roles: { include: { permissions: true } } };

@@ -3,11 +3,11 @@ import db from '../../modules/database.js';
 import { UpdateConnections } from '../../lib/handleMessage.js';
 import { logInfo } from '../../lib/logger.js';
 import { RequestWithUser } from '../../types/RequestWithUser.js';
-import { Permissions } from '@prisma/enums.js';
+import { Permissions } from '../../generated/client.js';
 import hasPermission from '../../lib/hasPermission.js';
 
 export default async function ApiDeleteChannel(req: RequestWithUser, res: FastifyReply) {
-	if (!hasPermission(req.user, Permissions.CHANNEL_CREATE))
+	if (!hasPermission(req.user!, Permissions.CHANNEL_CREATE))
 		return res.send({ status: 401, message: 'Missing permissions' });
 
 	const { channelId } = req.params as { channelId: string }; // Get id from url

@@ -20,7 +20,7 @@ export async function ApiUpdateUser(req: RequestWithUser, res: FastifyReply) {
 
 	await db.user.update({
 		where: {
-			id: req.user.id,
+			id: req.user!.id,
 		},
 		data: {
 			profileUrl: Buffer.from(
@@ -33,9 +33,9 @@ export async function ApiUpdateUser(req: RequestWithUser, res: FastifyReply) {
 	// console.log((await compressBase64Image(profileUrl)).length);
 
 	const updatedUser = req.user;
-	updatedUser.profileUrl = profileUrl.includes('base64')
-		? await compressBase64Image(profileUrl)
-		: profileUrl;
+	updatedUser!.profileUrl = Buffer.from(
+		profileUrl.includes('base64') ? await compressBase64Image(profileUrl) : profileUrl,
+	);
 
 	return res.send({ status: 200, data: updatedUser });
 }
