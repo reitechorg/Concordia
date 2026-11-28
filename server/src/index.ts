@@ -17,10 +17,22 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Start the server
-else
+else if (process.env.DEV)
 	spawn('npx tsx src/start.ts', {
 		stdio: 'inherit',
 		shell: true,
 		cwd: process.cwd(),
 		env: process.env,
 	});
+else if (process.argv.includes('--start-child')) {
+	import('./start.js');
+} else {
+	const child = spawn(process.execPath, ['--start-child'], {
+		stdio: 'inherit',
+	});
+
+	child.on('error', console.error);
+	child.on('exit', code => {
+		console.log('Child exited:', code);
+	});
+}

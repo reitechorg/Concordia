@@ -1,6 +1,6 @@
 import { FastifyReply } from 'fastify';
 import { RequestWithUser } from '../../types/RequestWithUser.js';
-import sharp from 'sharp';
+import { Image } from 'imagescript';
 import db from '../../modules/database.js';
 
 export async function ApiUser(req: RequestWithUser, res: FastifyReply) {
@@ -13,8 +13,8 @@ interface Body {
 
 export async function ApiUpdateUser(req: RequestWithUser, res: FastifyReply) {
 	const { profileUrl } = req.body as Body;
-	console.log(typeof req.body);
-	console.log(profileUrl);
+	// console.log(typeof req.body);
+	// console.log(profileUrl);
 
 	if (typeof profileUrl !== 'string') return res.status(400).send('Missing profileUrl');
 
@@ -29,8 +29,8 @@ export async function ApiUpdateUser(req: RequestWithUser, res: FastifyReply) {
 		},
 	});
 
-	console.log(profileUrl.length);
-	console.log((await compressBase64Image(profileUrl)).length);
+	// console.log(profileUrl.length);
+	// console.log((await compressBase64Image(profileUrl)).length);
 
 	const updatedUser = req.user;
 	updatedUser.profileUrl = profileUrl.includes('base64')
@@ -49,24 +49,33 @@ async function compressBase64Image(
 	// Remove data URI prefix if present
 	const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, '');
 
-	// Convert Base64 to Buffer
+	// Decode Base64
 	const imageBuffer = Buffer.from(cleanBase64, 'base64');
 
-	// Compress image
-	const compressedBuffer = await sharp(imageBuffer)
-		.rotate() // Apply EXIF orientation
-		.resize({
-			width: 250,
-			height: 250,
-			fit: 'cover',
-			position: 'center',
-			withoutEnlargement: true,
-		})
-		.webp({
-			quality,
-		})
-		.toBuffer();
+	// Decode image
+	const image = await Image.decode(imageBuffer);
 
-	// Convert back to Base64
-	return `data:image/webp;base64,${compressedBuffer.toString('base64')}`;
+	// Resize and crop to fit
+	const targetWidth = Math.min(maxWidth, 250);
+	const targetHeight = Math.min(maxHeight, 250);
+
+	const scale = Math.max(targetWidth / image.width, targetHeight / image.height);
+
+	const resizedWidth = Math.round(image.width * scale);
+	const resizedHeight = Math.round(image.height * scale);
+
+	image.resize(resizedWidth, resizedHeight);
+
+	// Center crop
+	const left = Math.floor((resizedWidth - targetWidth) / 2);
+	const top = Math.floor((resizedHeight - targetHeight) / 2);
+
+	const cropped = image.crop(left, top, targetWidth, targetHeight);
+
+	// Encode image
+	const compressedBuffer = await cropped.encodeWebP({
+		quality: quality,
+	});
+
+	return `data:image/webp;base64,${Buffer.from(compressedBuffer).toString('base64')}`;
 }

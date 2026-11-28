@@ -1,10 +1,14 @@
 {
-	"main": "./build/server.cjs",
-	"mainFormat": "commonjs",
+	"main": "./build/index.js",
+	"mainFormat": "module",
 	"output": "./build/concordia-server",
 	"disableExperimentalSEAWarning": true,
 	"useSnapshot": false,
-	"useCodeCache": true,
+	"useCodeCache": false,
+	"useVfs": true,
 	"execArgv": [],
-	"execArgvExtension": "env"
+	"execArgvExtension": "env",
+	"assets": {
+		"start.js": "./build/start.js"
+	}
 }

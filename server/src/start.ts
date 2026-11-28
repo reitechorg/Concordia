@@ -14,7 +14,10 @@ loadServerIcon();
 runHTTPServer();
 
 // Start update handler
-if (process.env.AUTO_UPDATE !== 'false') {
+if (
+	process.env.AUTO_UPDATE !== 'false' &&
+	(process.env.SERVER_UUID === undefined || process.env.SERVER_UUID === null)
+) {
 	updateHandler();
 	setInterval(
 		() => {
