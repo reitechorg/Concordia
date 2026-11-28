@@ -39,6 +39,11 @@ sudo systemctl daemon-reload
 sudo systemctl start concordia
 ```
 
+To check server logs use:
+```bash
+sudo journalctl -u concordia -f
+```
+
 ## Development
 
 To start the development server for the client, run:
